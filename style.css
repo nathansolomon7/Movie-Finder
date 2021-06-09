@@ -28,6 +28,11 @@ body{
     
 }
 
+.row{
+    background-color: #d9d9d9;
+    padding:5px;
+}
+
 
 .header-for-searchArea{
     background-color:black;
@@ -48,6 +53,8 @@ body{
     font-size:20px;
     border-radius: 8px;
     cursor:pointer;
+    display: block;
+    padding:4px;
 }
 
 #searchButton-details{
@@ -108,9 +115,10 @@ body{
 }
 
 #movieDetails{
-    color: white;
-    font-size: 16px;
+    color: black;
+    font-size: 20px;
     list-style-type: none;
+    font-family: Helvetica, Arial, sans-serif;
 }
 #movieDetails img {
     /* margin-left:500px; */
