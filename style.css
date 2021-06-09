@@ -1,10 +1,11 @@
 body{
     background-color:f4f4f4;
     color:#555;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: Helvetica, Arial, sans-serif;
     font-size:16px;
     line-height: 1.6em;
     margin:0;
+    background-color: black;
 }
 
 .container{
@@ -13,6 +14,13 @@ body{
     overflow:hidden;
 }
 
+.col-md-4{
+    display:flex;
+}
+
+.col-md-8{
+    padding-left:30px;
+}
 .main-header{
     background-color:#ffff00;
     color:#000000;
@@ -72,8 +80,8 @@ body{
 }
 
 #showcase h2{
-    color:black;
-    font-size:30px;
+    color:white;
+    font-size:40px;
     line-height:1.6em;
     padding-top:0px;
     text-align:center;
@@ -94,24 +102,27 @@ body{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     grid-gap: 20px;
+    width:98%;
+    margin:auto;
+    overflow:hidden;
 }
 
 #movieDetails{
-    color: black;
+    color: white;
     font-size: 16px;
     list-style-type: none;
 }
 #movieDetails img {
-    margin-left:500px;
+    /* margin-left:500px; */
 }
 .movie {
     list-style-type: none;
-    background-color: #ffff66;
+    background-color: #eaeaea;
     border-radius: 3px;
-    padding: 60px 50px;
+    padding: 25px 25px;
     display: grid;
-    grid-template-columns: 3fr 1fr;
-    text-align: left;
+    grid-template-rows: 1fr 3fr;
+    text-align: center;
     border-style: solid;
     border-color:black;
     border-width:2px;
@@ -122,13 +133,13 @@ body{
     margin-bottom: 20px;
     padding-bottom: 20px;
     margin-right: 5px;
-    font-size: 30px;
+    font-size: 25px;
     line-height: 1.6em;
 }
 
 a{
     /* to get rid of underline for links*/
-    /* text-decoration:none; */
+    text-decoration:none;
     color:#000;
 }
 
@@ -138,8 +149,11 @@ a:hover{
 
 
 .movie img {
-    max-height: 165px;
+    max-height: 300px;
     margin-bottom:20px;
+    /* added in test */
+   height: auto; /* maintain aspect ratio*/
+   margin: auto; /*optional centering of image*/
 }
 
 
