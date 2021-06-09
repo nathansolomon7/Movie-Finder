@@ -19,7 +19,9 @@
         <nav class="searchBar">
                 <input type="text" class="searchBartext" placeholder="Search for a Movie" />
                 <button type="button" class="searchButton">Search</button>
-        
+                
+                
+                
             
         </nav>
         </header>
@@ -30,5 +32,10 @@
         </section>
          <ul id="moviesList"></ul>
         <script src="siteCode.js"></script>
+        <script>
+        if((searchString_global) != null) {
+            grandLoadmoviesNextsearch();
+        }
+        </script>
     </body>
 </html>
