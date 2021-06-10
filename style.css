@@ -14,12 +14,34 @@ body{
     overflow:hidden;
 }
 
+#pagination-wrapper{
+    height: auto;
+    width: 100%;
+}
+
+.page-buttons{
+    cursor:pointer;
+    padding: 8px 16px;
+    float: center;
+    margin: 2px 3px; 
+    font-size:16px;
+}
+
+.page-buttons a:hover{
+    color:blue;
+    text-decoration: underline;
+}
+
+
+
 .col-md-4{
     display:flex;
 }
 
-.col-md-8{
+.col-md-8 h1{
     padding-left:30px;
+    line-height: 1.6em;
+    color:black;
 }
 .main-header{
     background-color:#ffff00;
@@ -55,6 +77,9 @@ body{
     cursor:pointer;
     display: block;
     padding:4px;
+}
+.searchButton:hover{
+    color:blue;
 }
 
 #searchButton-details{
@@ -109,16 +134,17 @@ body{
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
     grid-gap: 20px;
-    width:98%;
+    width:96%;
     margin:auto;
     overflow:hidden;
 }
 
-#movieDetails{
+.movieDetails{
     color: black;
     font-size: 20px;
     list-style-type: none;
     font-family: Helvetica, Arial, sans-serif;
+    padding-left: 30px;
 }
 #movieDetails img {
     /* margin-left:500px; */
