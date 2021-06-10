@@ -1,14 +1,11 @@
 //MUST DO BY TOMORROW THE 9TH:
-//ADD PAIGINATION
-// FIGURE OUT HOW TO GET MORE THAN 10 RESULTS
 // MUST HANDLE NOT HAVING AN EMPTY FIELD FOR THE TEXT FIELDS LIKE GENRE AND DIRECTOR 
-// ADD TIME FILTER 
-// COMMENT OUT CODE
 // ALLOW ENTER KEY USE UPON MAKING A SEARCH BY CHANGING THE BUTTON TO A FORM (IF POSSIBLE)
 
 //THINGS YOU CAN WAIT ON FOR OFFICE HOURS:
 //ASK IF ITS OK TO NOT BE ABLE TO GO BACK TO MOST RECENT SEARCHES SINCE I DONT GENERATE A NEW PAGE EACH TIME OR HOW TO FIX IT
-
+// ADD TIME FILTER 
+// add a search bar helper that will complete the search for you
 
 
  //used to get a user's text inputted into the search bar
@@ -26,29 +23,34 @@ for(var x = 0; x < searchBartextValues.length; x++) {
         console.log(searchStringtemp);
     });
 }
+// used in the API request to display the according "page" of movie search results
+var pageNum = 1;
 
 function loadMovies(){
     try{
         console.log("running loadMovies()");
-        // loadNextsearchHelper(searchString_global);
-        // var buttonReference_searchBartext = document.getElementsByClassName('searchBartext');
-        //     for(var x = 0; x < buttonReference_searchBartext.length; x++){
-        //          searchStringtemp = buttonReference_searchBartext[x].value;
-        //     }
         console.log(searchString_global);
         console.log("above is searchString_global in the loadMovies function");
         //request is sent to API as a general movie search, using the user's inputted string
-        $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=e5794361').then(function(response){
+        $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=e5794361' + '&page=' + pageNum).then(
+            function(response){
             console.log(response);
+            var totalNumpages = getTotalnumPages(response);
+            console.log("totalNumpages:");
+            console.log(totalNumpages);
             // function is called to then display the movies on the page
             displayMovies(response);
+            generatePagebuttons(totalNumpages_global);
             });
+            
     }
     
      catch(err) {
         console.error(err);
     }
 };
+
+
 // Function is called upon loading the movie Search page (movieSite.html)
 //receives the user's movie Search made on the details page, re-assigns 
 // searchString_global as the user's movie Search string, then calls loadMovies()
@@ -75,13 +77,42 @@ const displayMovies = (response) => {
                 href="movieDetails.html">${movie.Title}</a></h2>
                 <img src= ${movie.Poster} onerror="if(this.src != 'no-image-available.jpeg') this.src = 'no-image-available.jpeg';" >
                 </img>
-            </li>
-        `;
+            </li>`;
         })
         .join('');
     moviesList.innerHTML = htmlString;
 };
-/////////////////////////used for when movie title details///////////////////////////////////
+
+
+// gets the total number of pages that are going to be displayed for the user to choose
+var totalNumpages_global = 1;
+function getTotalnumPages(response){
+    var totalNumresults = response.totalResults;
+    var totalNumpages = Math.ceil(totalNumresults / 10);
+    totalNumpages_global = totalNumpages;
+    return totalNumpages;
+}
+
+
+//generates the pagination buttons that the user sees on the movieSite page
+function generatePagebuttons(totalNumpages_global) {
+    var wrapper = document.getElementById('pagination-wrapper');
+    wrapper.innerHTML = '';
+    // each button is given a different value in the ascending order that it is generated in
+    for (var page = 1; page <= totalNumpages_global; page++) {
+        wrapper.innerHTML += `<button type="button" value=${page} class="page-buttons">${page}</button>`
+    }
+}
+
+//when a paigination button is clicked, pageNum's value is updated with the 
+//pagination button's value. AN API request is sent with the updated pageNum in
+//the loadMovies() function, giving 10 more search results to the user
+$(document).on( 'click', '.page-buttons', function () {
+    pageNum = $(this).val();
+    console.log("totalNumpages_global after click:" + pageNum);
+    loadMovies();
+})
+
 
 // the movie title that has been clicked on by the user is stored in the user's sessionStorage in the 
 //movieDetails page, where the movieTitle will be retreieved in the displayMoviedetails() function 
@@ -100,7 +131,6 @@ function loadNextsearchHelper(nextMovieSearch){
     return false;
 }
 
-//////////////////////////////////////////////////////////////////////
 
 function displayMoviedetails() {
     // movieTitle that was clicked on in the previous page showing 10 results is retreieved 
@@ -134,8 +164,6 @@ function displayMoviedetails() {
     });
 };
 
-/////////////////// associating button clicks to calls //////////////////////////////////////////////////////
-//
 
 // upon cicking the search Button while doing a user search, loadMovies() is called,
 // displaying 10 movies at a time receieved from the search
