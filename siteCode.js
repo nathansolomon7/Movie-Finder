@@ -1,13 +1,17 @@
 //TODO:
-//FIX ALL/ CHOOSE BETTER VARIABLE NAMES
 // ADD TIME FILTER 
 // add a search bar helper that will complete the search for you
+//GET RID OF THE EVENT HANDLED SEARCH REGISTER. YOU DONT HAVE TO BUT ACKNOWLADGE THE ISSUE THAT AFTER GOING BACK 
+//TO A PREVIOUS SEARCH PAGE, YOU CAN NOT JUST PRESS ENTER. TEST TO SEE IF CASE WITH OTHER VERSION
 
 
  //used to get a user's text inputted into the search bar
  var searchString_global;
  var searchStringtemp;
+ var isBackPagepressed = false;
+ 
  console.log("running program:");
+ console.log("searchString_global:" + searchString_global);
 // the user's text in the search bar is set to searchStringtemp and is constantly updated 
 //upon each key press without them pressing the submit button
 var searchBartextValues = document.getElementsByClassName('searchBartext');
@@ -28,6 +32,7 @@ function loadMovies(){
         console.log(searchString_global);
         console.log("above is searchString_global in the loadMovies function");
         //request is sent to API as a general movie search, using the user's inputted string
+         // setMoviesearchStorage(searchString_global);
         $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=e5794361' + '&page=' + pageNum).then(
             function(response){
             console.log(response);
@@ -51,10 +56,28 @@ function loadMovies(){
 //receives the user's movie Search made on the details page, re-assigns 
 // searchString_global as the user's movie Search string, then calls loadMovies()
 // function, thus displaying the user its search results without pressing the search button
-function grandLoadmoviesNextsearch(){
-    let nextMovieSearch = sessionStorage.getItem('nextMovieSearch');
-    searchString_global = nextMovieSearch;
-    loadMovies();
+function detailsLoadmoviesNextsearch(){
+    //the movie search that the user typed in the search bar on the details page
+    var nextMovieSearch = sessionStorage.getItem('nextMovieSearch');
+    console.log("nextMovieSearch: " + nextMovieSearch);
+    console.log("is nextMovieSearch undefined:" + (nextMovieSearch == "undefined"));
+    
+    
+    if(nextMovieSearch == "undefined"){
+        var previousSearch = sessionStorage.getItem('currentMoviesearchTemp');
+        console.log("previousSearch:" + previousSearch)
+        searchString_global = previousSearch;
+    }
+    else{
+        searchString_global = nextMovieSearch;
+    }
+        //FIGURE OUT WHY NOT WORKING
+        
+        console.log("searchString_global value at end of grandLoad function:" + searchString_global);
+    
+        loadMovies();
+    
+    
 };
 
 //the result from the API search request is passed in. The function then 
@@ -69,7 +92,7 @@ const displayMovies = (response) => {
     const htmlString = response.Search.map((movie) => {
             return `
             <li class="movie">
-                <h2 class="movieTitlebutton"><a onclick="loadDetails('${movie.Title}')"
+                <h2 class="movieTitlebutton"><a onclick="loadDetails('${movie.Title}',searchString_global)"
                 href="movieDetails.html">${movie.Title}</a></h2>
                 <img src= ${movie.Poster} onerror="if(this.src != 'No-Image-Available2.jpeg') this.src = 'No-Image-Available2.jpeg';" >
                 </img>
@@ -113,12 +136,21 @@ $(document).on( 'click', '.page-buttons', function () {
 // the movie title that has been clicked on by the user is stored in the user's sessionStorage in the 
 //movieDetails page, where the movieTitle will be retreieved in the displayMoviedetails() function 
 // upon loading the page displaying the movie details
-function loadDetails(movieTitle){
+function loadDetails(movieTitle,previousSearch){
         sessionStorage.setItem('movieTitle',movieTitle);
+        sessionStorage.setItem('currentMoviesearchTemp', previousSearch);
+        sessionStorage.setItem('nextMovieSearch', "undefined");
         window.location = 'movieDetails.html';
         return false;
     
 };
+
+// function setMoviesearchStorage(currentMoviesearch){
+//     sessionStorage.setItem('currentMoviesearchTemp', currentMoviesearch);
+//     window.location = 'movieDetails.html';
+//     return false;
+// }
+
 // stores the user's search to Session Storage to the page displaying all movies (movieSite.html)
 // Used while making a search on the movie Details page
 function loadNextsearchHelper(nextMovieSearch){
@@ -160,6 +192,14 @@ function displayMoviedetails() {
     });
 };
 
+
+// window.addEventListener('popstate', function (e) {
+//     var state = e.state;
+//     if (state !== null) {
+//         isBackPagepressed = true;
+//         console.log("isBackPagepressed:" + isBackPagepressed); 
+//     }
+// });
 
 // upon cicking the search Button while doing a user search, loadMovies() is called,
 // displaying 10 movies at a time receieved from the search
