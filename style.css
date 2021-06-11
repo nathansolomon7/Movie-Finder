@@ -13,10 +13,16 @@ body{
     margin:auto;
     overflow:hidden;
 }
+.header-for-searchArea{
+    width:80%;
+    margin:auto;
+}
+
 
 #pagination-wrapper{
     height: auto;
     width: 100%;
+    padding-top:10px;
 }
 
 .page-buttons{
@@ -27,7 +33,7 @@ body{
     font-size:16px;
 }
 
-.page-buttons a:hover{
+.page-buttons:hover{
     color:blue;
     text-decoration: underline;
 }
@@ -68,29 +74,41 @@ body{
     width:100%;
 }
 
-.searchButton{
+#searchButton{
     float:right;
-    margin-right: 300px;
-    margin-top:26px;
+    margin-right: 160px;
+    margin-top:20px;
+    margin-bottom:40px;
     font-size:20px;
     border-radius: 8px;
     cursor:pointer;
     display: block;
     padding:4px;
+    display:block;
+    text-align: center;
 }
-.searchButton:hover{
+
+#searchButton:hover{
     color:blue;
 }
 
 #searchButton-details{
     float:right;
-    margin-right: 300px;
-    margin-top:26px;
+    margin-right: 160px;
+    margin-top:20px;
+    margin-bottom:40px;
     font-size:20px;
     border-radius: 8px;
     cursor:pointer;
+    display: block;
+    padding:4px;
+    display:block;
+    text-align: center;
 }
 
+#searchButton-details:hover{
+    color:blue;
+}
 
 .searchBartext{
     width:50%;
@@ -146,9 +164,16 @@ body{
     font-family: Helvetica, Arial, sans-serif;
     padding-left: 30px;
 }
-#movieDetails img {
-    /* margin-left:500px; */
+
+#movieDetails{
+    padding-right:30px;
 }
+
+#movieDetails img {
+    max-width: 300px;
+    max-height:450px;
+}
+
 .movie {
     list-style-type: none;
     background-color: #eaeaea;
@@ -183,11 +208,11 @@ a:hover{
 
 
 .movie img {
-    max-height: 300px;
+    max-height: 400px;
+    max-width:250px;
     margin-bottom:20px;
-    /* added in test */
-   height: auto; /* maintain aspect ratio*/
-   margin: auto; /*optional centering of image*/
+   height: auto; 
+   margin: auto; 
 }
 
 
@@ -200,9 +225,9 @@ a:hover{
     margin-top:40px;
 }
 
-@media(max-width:600px){
+/* @media(max-width:600px){
     #main{
         width:100%;
         float:none;
     }
-}
+} */
