@@ -1,9 +1,5 @@
-//MUST DO BY TOMORROW THE 9TH:
-// MUST HANDLE NOT HAVING AN EMPTY FIELD FOR THE TEXT FIELDS LIKE GENRE AND DIRECTOR 
-// ALLOW ENTER KEY USE UPON MAKING A SEARCH BY CHANGING THE BUTTON TO A FORM (IF POSSIBLE)
-
-//THINGS YOU CAN WAIT ON FOR OFFICE HOURS:
-//ASK IF ITS OK TO NOT BE ABLE TO GO BACK TO MOST RECENT SEARCHES SINCE I DONT GENERATE A NEW PAGE EACH TIME OR HOW TO FIX IT
+//TODO:
+//FIX ALL/ CHOOSE BETTER VARIABLE NAMES
 // ADD TIME FILTER 
 // add a search bar helper that will complete the search for you
 
@@ -20,7 +16,7 @@ for(var x = 0; x < searchBartextValues.length; x++) {
         searchStringtemp = (e.target.value);
         // searchStringtemp value is passed to global variable for other functions to access the string
         searchString_global = searchStringtemp;
-        console.log(searchStringtemp);
+        console.log(searchString_global);
     });
 }
 // used in the API request to display the according "page" of movie search results
@@ -75,7 +71,7 @@ const displayMovies = (response) => {
             <li class="movie">
                 <h2 class="movieTitlebutton"><a onclick="loadDetails('${movie.Title}')"
                 href="movieDetails.html">${movie.Title}</a></h2>
-                <img src= ${movie.Poster} onerror="if(this.src != 'no-image-available.jpeg') this.src = 'no-image-available.jpeg';" >
+                <img src= ${movie.Poster} onerror="if(this.src != 'No-Image-Available2.jpeg') this.src = 'No-Image-Available2.jpeg';" >
                 </img>
             </li>`;
         })
@@ -144,7 +140,7 @@ function displayMoviedetails() {
     let htmlStringdetails =
     `<div class="row">
     <div class="col-md-4">
-    <img src= ${response.Poster} alt = "images/no-image-available.jpeg" >
+    <img src= ${response.Poster} onerror="if(this.src != 'No-Image-Available2.jpeg') this.src = 'No-Image-Available2.jpeg';" >
     </img>
     
         <div class="col-md-8">
@@ -167,9 +163,10 @@ function displayMoviedetails() {
 
 // upon cicking the search Button while doing a user search, loadMovies() is called,
 // displaying 10 movies at a time receieved from the search
-var buttonReference = document.getElementsByClassName('searchButton');
-    for(var x = 0; x < buttonReference.length; x++){
-        buttonReference[x].onclick = function() {
-            loadMovies();
-    }
-}
+// var buttonReference = document.getElementById('searchButton');
+//         buttonReference.onclick = function() {
+//             loadMovies();
+//     }
+
+
+    
