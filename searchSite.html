@@ -15,16 +15,17 @@
             </div>
         </header>
         
+        <div class="container">
         <header class="header-for-searchArea"
         <nav class="searchBar">
-                <input type="text" class="searchBartext" placeholder="Search for a Movie" />
-                <button type="button" class="searchButton"><strong>Search</strong></button>
-                
-                
-                
-            
+            <form onsubmit="loadMovies(); return false;">
+                <input type="text" class="searchBartext" placeholder="Search for a Movie"></input>
+                <input type="submit" id="searchButton" value="Search"></input>
+            </form>
         </nav>
         </header>
+        </div>
+        
         <section id="showcase">
             <div class="container">
                 <h2>Search for any movie in the search bar above </h2>
@@ -35,8 +36,8 @@
          </div>
         <script src="siteCode.js"></script>
         <script>
-        // if((searchString_global) != null) {
-            grandLoadmoviesNextsearch();
+         // if((searchString_global) !== (null)) {
+            detailsLoadmoviesNextsearch();
         // }
         </script>
     </body>
