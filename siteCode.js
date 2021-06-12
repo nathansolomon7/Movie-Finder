@@ -1,6 +1,7 @@
 //TODO:
 // ADD TIME FILTER 
 // add a search bar helper that will complete the search for you
+// FIGURE OUT A WAY TO HANDLE NO SEARCHES FOUND THAT STOPS THE PROGRAM FROM RUNNING AND CRASHING
 //GET RID OF THE EVENT HANDLED SEARCH REGISTER. YOU DONT HAVE TO BUT ACKNOWLADGE THE ISSUE THAT AFTER GOING BACK 
 //TO A PREVIOUS SEARCH PAGE, YOU CAN NOT JUST PRESS ENTER. TEST TO SEE IF CASE WITH OTHER VERSION
 
@@ -39,6 +40,7 @@ function loadMovies(){
             var totalNumpages = getTotalnumPages(response);
             console.log("totalNumpages:");
             console.log(totalNumpages);
+            displayNumresults(totalNumresults_global);
             // function is called to then display the movies on the page
             displayMovies(response);
             generatePagebuttons(totalNumpages_global);
@@ -105,8 +107,10 @@ const displayMovies = (response) => {
 
 // gets the total number of pages that are going to be displayed for the user to choose
 var totalNumpages_global = 1;
+var totalNumresults_global;
 function getTotalnumPages(response){
     var totalNumresults = response.totalResults;
+    totalNumresults_global = totalNumresults;
     var totalNumpages = Math.ceil(totalNumresults / 10);
     totalNumpages_global = totalNumpages;
     return totalNumpages;
@@ -192,6 +196,16 @@ function displayMoviedetails() {
     });
 };
 
+function displayNumresults(totalNumresults_global){
+    var numResultsDisplay = document.getElementById("numResultsDisplay").innerHTML;
+        if (totalNumresults_global == 1){
+            document.getElementById("numResultsvalue").innerHTML = "Showing " + totalNumresults_global + " result";
+        }
+        else {
+            document.getElementById("numResultsvalue").innerHTML = "Showing " + totalNumresults_global + " results";
+        }
+          
+};
 
 
 
