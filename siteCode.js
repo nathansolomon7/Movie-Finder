@@ -91,9 +91,9 @@ function detailsLoadmoviesNextsearch(){
 const displayMovies = (response) => {
     const htmlString = response.Search.map((movie) => {
             return `
-            <li class="movie">
-                <h2 class="movieTitlebutton"><a onclick="loadDetails('${movie.Title}',searchString_global)"
-                href="movieDetails.html">${movie.Title}</a></h2>
+            <li class="movie" <a onclick="loadDetails('${movie.Title}',searchString_global)"
+            href="movieDetails.html"></a>
+                <h2 class="movieTitlebutton">${movie.Title}</h2>
                 <img src= ${movie.Poster} onerror="if(this.src != 'No-Image-Available2.jpeg') this.src = 'No-Image-Available2.jpeg';" >
                 </img>
             </li>`;
@@ -191,6 +191,8 @@ function displayMoviedetails() {
          movieDetails.innerHTML = htmlStringdetails;
     });
 };
+
+
 
 
 // window.addEventListener('popstate', function (e) {
