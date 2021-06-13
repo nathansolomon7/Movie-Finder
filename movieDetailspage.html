@@ -13,17 +13,19 @@
                 <h1>Movie Finder</h1
             </div>
         </header>
+        
+        <div class="container">
         <header class="header-for-searchArea"
         <nav id="searchBar">
             
-                <input type="text" class="searchBartext" placeholder="Search for a Movie" />
-                
-                <button type="button" id="searchButton-details"><a onclick="loadNextsearchHelper(searchString_global)"
-                    href="movieSite.html"><strong>Search</strong></a></button>
-                
+            <form onsubmit="loadNextsearchHelper(searchString_global); return false;">
+                <input type="text" class="searchBartext" placeholder="Search for a Movie"></input>
+                <input type="submit" id="searchButton-details" value="Search"><a href="movieSite.html"></a></input>
+            </form>
             
         </nav>
         </header>
+    </div>
         <ul id="movieDetails"></ul>
     
         <script src="siteCode.js"></script>
