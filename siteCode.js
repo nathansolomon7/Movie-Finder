@@ -1,14 +1,13 @@
 //TODO:
 
-
-// FIGURE OUT HOW WHEN THE USER TAKES AWAY THEIR MAX YEAR BY BACKSPACE IT REVERTS BACK 
-// TO ORIGINAL SEARCH. PERHAPS WHEN THAT VALUE GETS SUBTRACTED BY 1000 LOAD GRANDSEARCH
-
+//FIX SEARCH BUTTON PLACEMENT
 // add a search bar helper that will complete the search for you
-// FIGURE OUT A WAY TO HANDLE NO SEARCHES FOUND THAT STOPS THE PROGRAM FROM RUNNING AND CRASHING
-//GET RID OF THE EVENT HANDLED SEARCH REGISTER.
-// ACKNOWLADGE THE ISSUE THAT AFTER GOING BACK TO A PREVIOUS SEARCH PAGE, YOU
-// CAN NOT JUST PRESS ENTER. TEST TO SEE IF CASE WITH OTHER VERSION
+//ERRORS: 
+
+
+
+
+
 
 
  //used to get a user's text inputted into the search bar
@@ -49,6 +48,9 @@ function loadMovies(){
         console.log("above is searchString_global in the loadMovies function");
         //request is sent to API as a general movie search, using the user's inputted string
          // setMoviesearchStorage(searchString_global);
+         if(searchString_global === undefined || searchString_global == ""){
+             searchString_global = sessionStorage.getItem('currentMoviesearchTemp');
+         }
         $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
             function(response){
             console.log(response);
@@ -287,6 +289,7 @@ function displayNumresults(totalNumresults_global){
 
 
 function displayTimeFilter(){
+    console.log("now inside displayTimeFilter() function");
     let timeFilterHTML =
         `<p id="searchByYear-timeFilter">Filter Search By Year: </p>
         <input id = "timeFilterboxMin" placeholder = "ex: 2000"></input>
