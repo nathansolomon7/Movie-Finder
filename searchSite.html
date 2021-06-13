@@ -32,13 +32,28 @@
             </div>
         </section>
         <h3 id= "numResultsDisplay"> <p id="numResultsvalue"></p></h3>
+        <div id = containerTimeFilter>
+        
+        </div>
+            <div id="noResultsFoundcontainer">
+                <h1 id= "noResultsFoundtext"></h1>
+            </div>
+        <!-- <input class= "timeFilterbox" placeholder="2000"></input>
+        <p> to </p>
+        <input class= "timeFilterbox" placeholder="2010"></input> -->
          <ul id="moviesList"></ul>
+         <div id="showMorebuttonDiv"></div>
+         <!-- onclick="showMoreresults(pageNum, nextResponse)" add this if you wanna use onclick in HTML -->
          <div id="pagination-wrapper">
          </div>
         <script src="siteCode.js"></script>
         <script>
          // if((searchString_global) !== (null)) {
-            detailsLoadmoviesNextsearch();
+            loadNextsearchDetailspage();
+            
+            // if (totalNumresults_global >= 50) {
+                displayTimeFilter();
+            
         // }
         </script>
     </body>
