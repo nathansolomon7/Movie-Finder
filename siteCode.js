@@ -1,15 +1,31 @@
 //TODO:
-// ADD TIME FILTER 
+
+
+// FIGURE OUT HOW WHEN THE USER TAKES AWAY THEIR MAX YEAR BY BACKSPACE IT REVERTS BACK 
+// TO ORIGINAL SEARCH. PERHAPS WHEN THAT VALUE GETS SUBTRACTED BY 1000 LOAD GRANDSEARCH
+
 // add a search bar helper that will complete the search for you
 // FIGURE OUT A WAY TO HANDLE NO SEARCHES FOUND THAT STOPS THE PROGRAM FROM RUNNING AND CRASHING
-//GET RID OF THE EVENT HANDLED SEARCH REGISTER. YOU DONT HAVE TO BUT ACKNOWLADGE THE ISSUE THAT AFTER GOING BACK 
-//TO A PREVIOUS SEARCH PAGE, YOU CAN NOT JUST PRESS ENTER. TEST TO SEE IF CASE WITH OTHER VERSION
+//GET RID OF THE EVENT HANDLED SEARCH REGISTER.
+// ACKNOWLADGE THE ISSUE THAT AFTER GOING BACK TO A PREVIOUS SEARCH PAGE, YOU
+// CAN NOT JUST PRESS ENTER. TEST TO SEE IF CASE WITH OTHER VERSION
 
 
  //used to get a user's text inputted into the search bar
  var searchString_global;
  var searchStringtemp;
  var isBackPagepressed = false;
+ var maxYearparam_global;
+ var minYearparam_global;
+ var isFilteredSearch = false;
+ var timeFilteredResponse_global;
+ var isShowMoreclicked = false;
+ var isPaganationremoved = false;
+ var isShowmoreButtonremoved = false;
+ var isnoResultsFoundfiltered = false;
+ var isgetRidofFilterSearch = false;
+ // used in the API request to display the according "page" of movie search results
+ var pageNum = 1;
  
  console.log("running program:");
  console.log("searchString_global:" + searchString_global);
@@ -24,8 +40,7 @@ for(var x = 0; x < searchBartextValues.length; x++) {
         console.log(searchString_global);
     });
 }
-// used in the API request to display the according "page" of movie search results
-var pageNum = 1;
+
 
 function loadMovies(){
     try{
@@ -34,16 +49,59 @@ function loadMovies(){
         console.log("above is searchString_global in the loadMovies function");
         //request is sent to API as a general movie search, using the user's inputted string
          // setMoviesearchStorage(searchString_global);
-        $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=e5794361' + '&page=' + pageNum).then(
+        $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
             function(response){
             console.log(response);
+            if(response.Error == "Movie not found!"){
+                displayNumresults(0);
+                displayNoresultsFound();
+                clearElement("#moviesList");
+                clearElement("#pagination-wrapper");
+                clearElement("#showMorebutton");
+                clearElement("#containerTimeFilter");
+                return;
+            }
             var totalNumpages = getTotalnumPages(response);
+            displayNumresults(totalNumresults_global);
+            
+            if ((isFilteredSearch == true) && (maxYearparam_global > 999)){
+                console.log("isFilteredSearch andMaxYearparam is true");
+                 filterResponsebyYear(response.Search);
+                console.log("timeFilteredResponse_global:");
+                console.log(timeFilteredResponse_global);
+                var filteredNumresults = timeFilteredResponse_global.length;
+                displayNumresults(filteredNumresults)
+                response = timeFilteredResponse_global;
+                displayMoviesFiltered(response);
+            }
+            
             console.log("totalNumpages:");
             console.log(totalNumpages);
-            displayNumresults(totalNumresults_global);
+            if(isnoResultsFoundfiltered == true){
+                displayNoresultsFound();
+                clearElement("#pagination-wrapper");
+                clearElement("#showMorebutton");
+                 
+            }
             // function is called to then display the movies on the page
-            displayMovies(response);
-            generatePagebuttons(totalNumpages_global);
+            if(isFilteredSearch == false && isnoResultsFoundfiltered == false){
+                clearElement("#noResultsFoundtext");
+                clearElement("#pagination-wrapper");
+                clearElement("#showMorebutton");
+                displayMovies(response);
+            }
+            
+            if (isFilteredSearch == false && isnoResultsFoundfiltered == false){
+                if(isgetRidofFilterSearch == false){
+                    displayTimeFilter();
+                }
+            
+                createShowMoreButton();
+                generatePagebuttons(totalNumpages_global);
+            }
+            
+            isFilteredSearch = false;
+            isnoResultsFoundfiltered = false;
             });
             
     }
@@ -58,7 +116,8 @@ function loadMovies(){
 //receives the user's movie Search made on the details page, re-assigns 
 // searchString_global as the user's movie Search string, then calls loadMovies()
 // function, thus displaying the user its search results without pressing the search button
-function detailsLoadmoviesNextsearch(){
+function loadNextsearchDetailspage(){
+    isnoResultsFoundfiltered = false;
     //the movie search that the user typed in the search bar on the details page
     var nextMovieSearch = sessionStorage.getItem('nextMovieSearch');
     console.log("nextMovieSearch: " + nextMovieSearch);
@@ -92,6 +151,23 @@ function detailsLoadmoviesNextsearch(){
 // the user is taken to a site where the details of the movie is displayed
 const displayMovies = (response) => {
     const htmlString = response.Search.map((movie) => {
+            return `
+            <li class="movie" <a onclick="loadDetails('${movie.Title}',searchString_global)"
+            href="movieDetails.html"></a>
+                <h2 class="movieTitlebutton">${movie.Title}</h2>
+                <img src= ${movie.Poster} onerror="if(this.src != 'No-Image-Available2.jpeg') this.src = 'No-Image-Available2.jpeg';" >
+                </img>
+            </li>`;
+        })
+        .join('');
+        
+            moviesList.innerHTML = htmlString;
+    
+    
+};
+
+const displayMoviesFiltered = (response) => {
+    const htmlString = response.map((movie) => {
             return `
             <li class="movie" <a onclick="loadDetails('${movie.Title}',searchString_global)"
             href="movieDetails.html"></a>
@@ -169,7 +245,7 @@ function displayMoviedetails() {
     // on the movie details page
     let movieTitle = sessionStorage.getItem('movieTitle');
     // API movie TITLE request is sent using the movieTitle variable that was retreived above 
-    $.getJSON('https://www.omdbapi.com/?t=' + movieTitle + '&apikey=e5794361').then(function(response){
+    $.getJSON('https://www.omdbapi.com/?t=' + movieTitle + '&apikey=ae410769').then(function(response){
         console.log(response);
     // HTML is dynamically generated onto details page as the singular object (response), which is the 
     // movie, is used to display its instances
@@ -209,20 +285,141 @@ function displayNumresults(totalNumresults_global){
 
 
 
-// window.addEventListener('popstate', function (e) {
-//     var state = e.state;
-//     if (state !== null) {
-//         isBackPagepressed = true;
-//         console.log("isBackPagepressed:" + isBackPagepressed); 
-//     }
-// });
 
-// upon cicking the search Button while doing a user search, loadMovies() is called,
-// displaying 10 movies at a time receieved from the search
-// var buttonReference = document.getElementById('searchButton');
-//         buttonReference.onclick = function() {
-//             loadMovies();
-//     }
+function displayTimeFilter(){
+    let timeFilterHTML =
+        `<p id="searchByYear-timeFilter">Filter Search By Year: </p>
+        <input id = "timeFilterboxMin" placeholder = "ex: 2000"></input>
+        <p id="to-in-TimeFilter"> to </p>
+        <input id = "timeFilterboxMax" placeholder = "ex: 2010"></input>`;
+        
+        containerTimeFilter.innerHTML = timeFilterHTML;
+};
+
+function filterResponsebyYear(response){
+    console.log("response inside filterResponsebyYear function:");
+    console.log(response);
+    if (isPaganationremoved == false){
+        removePaganationbuttons();
+    }
+    if (isShowmoreButtonremoved == false){
+        removeShowmoreButton();
+    }
+    console.log("minYearparam_global: "+ minYearparam_global);
+    console.log("maxYearparam_global: "+ maxYearparam_global);
+     timeFilteredResponse_global = response.filter(function(movie){
+         console.log("movie.Year: " + movie.Year);
+        return (movie.Year >= minYearparam_global && movie.Year <= maxYearparam_global);
+        console.log((movie.Year >= minYearparam_global && movie.Year <= maxYearparam_global));
+    })
+    if (timeFilteredResponse_global.length === 0){
+        isnoResultsFoundfiltered = true;
+    }
+};
+var firstResponse;
+var concatResponse
+var nextResponse;
+function showMoreresults(currentPagenum, currentResponse){
+    removePaganationbuttons();
+    removeShowmoreButton();
+    isShowMoreclicked = true;
+    // console.log("totalNumpages_global in showMoreresults function: " + totalNumpages_global);
+    $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + currentPagenum).then(
+        function(response){
+                nextResponse = response.Search;
+                // console.log("nextResponse (page 2 for first one):")
+                // console.log(nextResponse);
+                
+                if (currentPagenum <= totalNumpages_global && currentPagenum == 1){
+                     firstResponse = response.Search;
+                     console.log("firstResponse (page 1): ");
+                     console.log(firstResponse);
+                    showMoreresults(currentPagenum + 1, firstResponse);
+                }
+                    if (currentPagenum <= totalNumpages_global && currentPagenum != 1){
+                        concatResponse = currentResponse.concat(nextResponse);
+                        console.log("concatResponse:")
+                        console.log(concatResponse);
+                        showMoreresults(currentPagenum + 1, concatResponse);
+                    }
+                    else{
+                        console.log(concatResponse);
+                        displayMoviesFiltered(concatResponse);
+                    }
+                            
+        });
+        
+};
+
+function removePaganationbuttons(){
+    isPaganationremoved = true;
+    // var paginationWrapper = document.getElementById('pagination-wrapper');
+    // paginationWrapper.parentNode.removeChild(paginationWrapper);
+    // return false;
+    clearElement("#pagination-wrapper");
+};
+
+function removeShowmoreButton(){
+    isShowmoreButtonremoved = true;
+    // var showMorebutton = document.getElementById('showMorebutton');
+    // showMorebutton.parentNode.removeChild(showMorebutton);
+    $("#showMorebutton").remove();
+};
+
+function createShowMoreButton(){
+    let createShowMoreButtonHTML =
+        `<button id= "showMorebutton">Show More</input>`;
+        showMorebuttonDiv.innerHTML = createShowMoreButtonHTML;
+}
+
+
+//FIX HTML TAG ATTACHMENT
+function displayNoresultsFound(){
+    console.log("displayNoresultsFound() activated");
+    // let noResultsFoundHTML =
+    // `<h1 id="No-results-found">No Results Found</h1>`;
+    // noResultsFound.innherHTML = noResultsFoundHTML;
+        document.getElementById("noResultsFoundtext").innerHTML = "No Results Found";
+    
+};
+
+function clearElement(elementTag){
+    // var moviesListresults = document.getElementsByClassName('moviesList');
+    // console.log("clearElement() activated");
+    // for(var x = 0; x < moviesListresults.length; x++) {
+    //     moviesListresults[x].innerHTML = "";
+    // }
+    $(elementTag).empty();
+};
+
+
+$(document).on( 'keyup', '#timeFilterboxMin', function (e) {
+    var minYearparam = (e.target.value);
+    minYearparam_global = minYearparam;
+    // console.log("minYearparam:" + minYearparam);
+});
+
+$(document).on( 'keyup', '#timeFilterboxMax', function (e) {
+    
+    if (e.keyCode == 8) {
+        isgetRidofFilterSearch = true;
+        loadMovies();
+    }
+    isFilteredSearch = true;
+    var maxYearparam = (e.target.value);
+    maxYearparam_global = maxYearparam;
+    console.log("maxYearparam:" + maxYearparam);
+    loadMovies();
+});
+
+$(document).on( 'click', '#showMorebutton', function () {
+    showMoreresults(pageNum, nextResponse);
+});
+
+
+
+    
+
 
 
     
