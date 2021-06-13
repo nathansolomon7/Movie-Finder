@@ -74,6 +74,96 @@ body{
     width:100%;
 }
 
+
+/* .autocom-box li{
+  list-style: none;
+  padding: 8px 12px;
+  display: none;
+  width: 100%;
+  cursor: default;
+  border-radius: 3px;
+}
+
+.autocom-box li:hover{
+  background: #efefef;
+} */
+
+#numResultsDisplay{
+    padding-bottom: 20px;
+}
+
+#containerTimeFilter{
+    padding-left: 45px;
+}
+#timeFilterboxMin{
+    width:60px;
+    height:40px;
+    font-size: 20px;
+}
+
+#timeFilterboxMin::placeholder{
+    font-size: 15px;
+}
+
+#timeFilterboxMax{
+    width:60px;
+    height:40px;
+    font-size: 20px;
+}
+
+#to-in-TimeFilter{
+    padding-left:20px;
+}
+
+#searchByYear-timeFilter{
+    font-size:20px;
+}
+
+#timeFilterboxMax::placeholder{
+    font-size: 15px;
+}
+
+#showMorebuttonDiv{
+    padding-top:25px;
+    padding-bottom:20px;
+    padding-left: 505px;
+}
+
+#pagination-wrapper{
+    padding-bottom:25px;
+}
+#containerTimeFilter{
+    color:white;
+    padding-left: 30px;
+}
+
+
+#showMorebutton{
+    display:block;
+    width:300px;
+    height:75px;
+    font-size:30px;
+    font-weight: bold;
+}
+
+#showMorebutton:hover{
+    cursor:pointer;
+}
+
+
+#noResultsFoundtext{
+    text-align: center;
+    color:white;
+}
+
+#numResultsDisplay{
+    padding-left: 36px;
+}
+
+#No-results-found h1{
+    color:white;
+}
+
 #searchButton{
     float:right;
     margin-right: 160px;
@@ -186,7 +276,16 @@ body{
     border-color:black;
     border-width:2px;
 }
+.movie h2{
+    color:black;
+}
+.movie:hover{
+    cursor:pointer;
+}
 
+.movie h2:hover{
+    color:blue;
+}
 
  .movieTitlebutton {
     margin-bottom: 20px;
