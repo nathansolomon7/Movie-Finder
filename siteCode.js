@@ -1,9 +1,9 @@
 //TODO:
-
-//FIX SEARCH BUTTON PLACEMENT
 // add a search bar helper that will complete the search for you
 //ERRORS: 
-
+//figure out the whole reload searchstring situation. Its messy cuz it conflicts with the use 
+// of the details page search bar and its error handling.
+//perhaps make two functions. one for page load and one for search bar search if possible?
 
 
 
@@ -23,6 +23,8 @@
  var isShowmoreButtonremoved = false;
  var isnoResultsFoundfiltered = false;
  var isgetRidofFilterSearch = false;
+ var searchStringCaseUndefined;
+ // isLessTenresults = false;
  // used in the API request to display the according "page" of movie search results
  var pageNum = 1;
  
@@ -36,6 +38,7 @@ for(var x = 0; x < searchBartextValues.length; x++) {
         searchStringtemp = (e.target.value);
         // searchStringtemp value is passed to global variable for other functions to access the string
         searchString_global = searchStringtemp;
+        searchStringCaseUndefined = searchString_global;
         console.log(searchString_global);
     });
 }
@@ -49,6 +52,7 @@ function loadMovies(){
         //request is sent to API as a general movie search, using the user's inputted string
          // setMoviesearchStorage(searchString_global);
          if(searchString_global === undefined || searchString_global == ""){
+             // searchString_global = searchStringCaseUndefined;
              searchString_global = sessionStorage.getItem('currentMoviesearchTemp');
          }
         $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
@@ -77,6 +81,18 @@ function loadMovies(){
                 displayMoviesFiltered(response);
             }
             
+            if(totalNumresults_global < 10){
+                removeShowmoreButton();
+                removePaganationbuttons();
+            }
+            //FIGURE OUT WHY NOT WORKING
+            console.log("pageNum value: " + pageNum);
+            if(pageNum == totalNumpages_global){
+                console.log("removeremoveShowmoreButton() activated for pageNum == totalNumpages_global");
+                removeShowmoreButton();
+            }
+            
+            
             console.log("totalNumpages:");
             console.log(totalNumpages);
             if(isnoResultsFoundfiltered == true){
@@ -97,13 +113,20 @@ function loadMovies(){
                 if(isgetRidofFilterSearch == false){
                     displayTimeFilter();
                 }
-            
-                createShowMoreButton();
-                generatePagebuttons(totalNumpages_global);
+                
+                if(totalNumresults_global > 10){
+                    if(pageNum != totalNumpages_global){
+                        createShowMoreButton();
+                    }
+                    generatePagebuttons(totalNumpages_global);
+                }
+                
             }
             
             isFilteredSearch = false;
             isnoResultsFoundfiltered = false;
+            isLessTenresults = false;
+            pageNum = 1;
             });
             
     }
@@ -119,6 +142,7 @@ function loadMovies(){
 // searchString_global as the user's movie Search string, then calls loadMovies()
 // function, thus displaying the user its search results without pressing the search button
 function loadNextsearchDetailspage(){
+    
     isnoResultsFoundfiltered = false;
     //the movie search that the user typed in the search bar on the details page
     var nextMovieSearch = sessionStorage.getItem('nextMovieSearch');
@@ -126,8 +150,9 @@ function loadNextsearchDetailspage(){
     console.log("is nextMovieSearch undefined:" + (nextMovieSearch == "undefined"));
     
     
-    if(nextMovieSearch == "undefined"){
+    if(nextMovieSearch === "undefined"){
         var previousSearch = sessionStorage.getItem('currentMoviesearchTemp');
+        
         console.log("previousSearch:" + previousSearch)
         searchString_global = previousSearch;
     }
