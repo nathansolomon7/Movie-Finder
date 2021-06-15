@@ -68,17 +68,27 @@ function loadMovies(){
                 return;
             }
             var totalNumpages = getTotalnumPages(response);
+            console.log("totalNumresults_global: " + totalNumresults_global);
             displayNumresults(totalNumresults_global);
             
             if ((isFilteredSearch == true) && (maxYearparam_global > 999)){
                 console.log("isFilteredSearch andMaxYearparam is true");
-                 filterResponsebyYear(response.Search);
+                showMoreresults(pageNum, response);
                 console.log("timeFilteredResponse_global:");
                 console.log(timeFilteredResponse_global);
-                var filteredNumresults = timeFilteredResponse_global.length;
-                displayNumresults(filteredNumresults)
-                response = timeFilteredResponse_global;
-                displayMoviesFiltered(response);
+                // var filteredNumresults = timeFilteredResponse_global.length;
+                // console.log("timeFilteredResponse_global.length: " + filteredNumresults);
+                displayNumresults(filteredNumresults);
+                console.log("isnoResultsFoundfiltered is: " + isnoResultsFoundfiltered);
+                // if (isnoResultsFoundfiltered == true){
+                //      displayNoresultsFound();
+                //     $("#containerTimeFilter").empty();
+                // }
+                isFilteredSearch = false;
+                return;
+                
+                // response = timeFilteredResponse_global;
+                // displayMoviesFiltered(response);
             }
             
             if(totalNumresults_global < 10){
@@ -106,7 +116,9 @@ function loadMovies(){
                 clearElement("#noResultsFoundtext");
                 clearElement("#pagination-wrapper");
                 clearElement("#showMorebutton");
+                if (searchString_global != null || searchString_global != undefined){
                 displayMovies(response);
+                }
             }
             
             if (isFilteredSearch == false && isnoResultsFoundfiltered == false){
@@ -114,13 +126,18 @@ function loadMovies(){
                     displayTimeFilter();
                 }
                 
-                if(totalNumresults_global > 10){
+                if(totalNumresults_global > 10 && (searchString_global != null || searchString_global != undefined)){
                     if(pageNum != totalNumpages_global){
                         createShowMoreButton();
                     }
                     generatePagebuttons(totalNumpages_global);
                 }
                 
+            }
+            
+            if(searchString_global == null || searchString_global == "null") {
+                $("#containerTimeFilter").empty();
+                    $("#numResultsDisplay").empty();
             }
             
             isFilteredSearch = false;
@@ -300,12 +317,12 @@ function displayMoviedetails() {
 };
 
 function displayNumresults(totalNumresults_global){
-    var numResultsDisplay = document.getElementById("numResultsDisplay").innerHTML;
+    // var numResultsDisplay = document.getElementById("numResultsDisplay").innerHTML;
         if (totalNumresults_global == 1){
-            document.getElementById("numResultsvalue").innerHTML = "Showing " + totalNumresults_global + " result";
+            document.getElementById("numResultsDisplay").innerHTML = "Showing " + totalNumresults_global + " result";
         }
         else {
-            document.getElementById("numResultsvalue").innerHTML = "Showing " + totalNumresults_global + " results";
+            document.getElementById("numResultsDisplay").innerHTML = "Showing " + totalNumresults_global + " results";
         }
           
 };
@@ -325,8 +342,6 @@ function displayTimeFilter(){
 };
 
 function filterResponsebyYear(response){
-    console.log("response inside filterResponsebyYear function:");
-    console.log(response);
     if (isPaganationremoved == false){
         removePaganationbuttons();
     }
@@ -336,14 +351,16 @@ function filterResponsebyYear(response){
     console.log("minYearparam_global: "+ minYearparam_global);
     console.log("maxYearparam_global: "+ maxYearparam_global);
      timeFilteredResponse_global = response.filter(function(movie){
-         console.log("movie.Year: " + movie.Year);
+         // console.log("movie.Year: " + movie.Year);
         return (movie.Year >= minYearparam_global && movie.Year <= maxYearparam_global);
         console.log((movie.Year >= minYearparam_global && movie.Year <= maxYearparam_global));
     })
-    if (timeFilteredResponse_global.length === 0){
+    if (timeFilteredResponse_global.length == 0){
         isnoResultsFoundfiltered = true;
+        // console.log("isnoResultsFoundfiltered is: " + isnoResultsFoundfiltered);
     }
 };
+
 var firstResponse;
 var concatResponse
 var nextResponse;
@@ -360,19 +377,38 @@ function showMoreresults(currentPagenum, currentResponse){
                 
                 if (currentPagenum <= totalNumpages_global && currentPagenum == 1){
                      firstResponse = response.Search;
-                     console.log("firstResponse (page 1): ");
-                     console.log(firstResponse);
+                     // console.log("firstResponse (page 1): ");
+                     // console.log(firstResponse);
                     showMoreresults(currentPagenum + 1, firstResponse);
                 }
                     if (currentPagenum <= totalNumpages_global && currentPagenum != 1){
                         concatResponse = currentResponse.concat(nextResponse);
-                        console.log("concatResponse:")
-                        console.log(concatResponse);
+                        // console.log("currentPagenum: " + currentPagenum);
+                        // console.log("totalNumpages_global: " + totalNumpages_global);
+                        // console.log("currentPagenum: " + currentPagenum);
+                        // console.log("isFilteredSearch is: " + isFilteredSearch);
+                        // console.log("concatResponse:");
+                        // console.log(concatResponse);
                         showMoreresults(currentPagenum + 1, concatResponse);
                     }
                     else{
-                        console.log(concatResponse);
-                        displayMoviesFiltered(concatResponse);
+                        console.log("entered the else statement of showMoreresults()");
+                        if(isFilteredSearch == true){
+                            console.log()
+                             filterResponsebyYear(concatResponse);
+                            console.log("filtered concatResponse (now timeFilteredResponse_global): ");
+                            console.log(timeFilteredResponse_global);
+                            if (timeFilteredResponse_global.length == 0){
+                                console.log("timeFilteredResponse_global.length == 0 and displayNoresultsFound is gonna be ran");
+                                 displayNoresultsFound();
+                            }
+                            displayNumresults(timeFilteredResponse_global.length);
+                            displayMoviesFiltered(timeFilteredResponse_global);
+                        }
+                        else{
+                            displayMoviesFiltered(concatResponse);
+                        }
+                        
                     }
                             
         });
@@ -422,25 +458,42 @@ function clearElement(elementTag){
 
 
 $(document).on( 'keyup', '#timeFilterboxMin', function (e) {
+    isFilteredSearch = true;
     var minYearparam = (e.target.value);
     minYearparam_global = minYearparam;
+    if (e.keyCode == 8) {
+        isgetRidofFilterSearch = true;
+        isFilteredSearch = false;
+        if(minYearparam_global > 999){
+            loadMovies();
+        }
+        
+    }
+    
     // console.log("minYearparam:" + minYearparam);
 });
 
 $(document).on( 'keyup', '#timeFilterboxMax', function (e) {
-    
+    isFilteredSearch = true;
     if (e.keyCode == 8) {
         isgetRidofFilterSearch = true;
+        isFilteredSearch = false;
         loadMovies();
     }
-    isFilteredSearch = true;
     var maxYearparam = (e.target.value);
     maxYearparam_global = maxYearparam;
     console.log("maxYearparam:" + maxYearparam);
+    if(maxYearparam_global > 999){
     loadMovies();
+    }
 });
 
+
+
+
+
 $(document).on( 'click', '#showMorebutton', function () {
+    isFilteredSearch = false;
     showMoreresults(pageNum, nextResponse);
 });
 
