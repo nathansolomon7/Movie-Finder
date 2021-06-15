@@ -63,7 +63,7 @@ function loadMovies(){
                 displayNoresultsFound();
                 clearElement("#moviesList");
                 clearElement("#pagination-wrapper");
-                clearElement("#showMorebutton");
+                removeShowmoreButton();
                 clearElement("#containerTimeFilter");
                 return;
             }
@@ -143,6 +143,7 @@ function loadMovies(){
             isFilteredSearch = false;
             isnoResultsFoundfiltered = false;
             isLessTenresults = false;
+            isgetRidofFilterSearch = false;
             pageNum = 1;
             });
             
