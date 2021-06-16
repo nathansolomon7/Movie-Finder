@@ -173,8 +173,8 @@ function autoCompleteloadMovies(){
             }
                 var autoCompleteArray = [];
                 response.Search.map((movie) => {
-                    var movieEntry = '<li>' + movie.Title + '</li>';
-                autoCompleteArray.push(movieEntry);
+                    
+                autoCompleteArray.push(movie.Title);
                 console.log("autoCompleteArray: ");
                 console.log(autoCompleteArray);
                 displayAutocompleteSuggestions(autoCompleteArray);
@@ -184,17 +184,17 @@ function autoCompleteloadMovies(){
 };
 
 function displayAutocompleteSuggestions(autoCompleteArray){
-        // console.log("displayAutocompleteSuggestions() activated");
-        // var autoCompleteHTML = autoCompleteArray.map((movie) => {
-        //          `<li > movie </li>`;
-        //     })
-        //     .join('');
-                var movieRecommendationsList = document.getElementById('movieRecommendationsList');
-        //         // movieRecommendationsList[0].innerHTML = autoCompleteHTML;
-        //         console.log("hello");
-        //         $(".autocomBox").html(autoCompleteHTML);
-        let autoCompleteArraystring = autoCompleteArray.join('');
-        movieRecommendationsList.innerHTML = autoCompleteArraystring;
+        
+        var movieRecommendationsList = document.getElementById('movieRecommendationsList');
+        
+            const autoCompleteArrayHTML = autoCompleteArray.map((movie) => {
+                    return `
+                    <li <a onclick="loadDetails('${movie}', searchString_global)"
+                    href="movieDetails.html">${movie}</a></li>`;
+            }).join('');
+        
+        
+        movieRecommendationsList.innerHTML = autoCompleteArrayHTML;
         
         
 };
