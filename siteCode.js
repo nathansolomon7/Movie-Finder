@@ -23,7 +23,6 @@
  var isShowmoreButtonremoved = false;
  var isnoResultsFoundfiltered = false;
  var isgetRidofFilterSearch = false;
- var searchStringCaseUndefined;
  // isLessTenresults = false;
  // used in the API request to display the according "page" of movie search results
  var pageNum = 1;
@@ -38,8 +37,8 @@ for(var x = 0; x < searchBartextValues.length; x++) {
         searchStringtemp = (e.target.value);
         // searchStringtemp value is passed to global variable for other functions to access the string
         searchString_global = searchStringtemp;
-        searchStringCaseUndefined = searchString_global;
         console.log(searchString_global);
+        autoCompleteloadMovies();
     });
 }
 
@@ -52,7 +51,6 @@ function loadMovies(){
         //request is sent to API as a general movie search, using the user's inputted string
          // setMoviesearchStorage(searchString_global);
          if(searchString_global === undefined || searchString_global == ""){
-             // searchString_global = searchStringCaseUndefined;
              searchString_global = sessionStorage.getItem('currentMoviesearchTemp');
          }
         $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
@@ -66,6 +64,16 @@ function loadMovies(){
                 removeShowmoreButton();
                 clearElement("#containerTimeFilter");
                 return;
+            }
+            if(response.Error == "Too many results."){
+                displayNumresults(0);
+                displayToomanyResultsfound();
+                clearElement("#moviesList");
+                clearElement("#pagination-wrapper");
+                removeShowmoreButton();
+                clearElement("#containerTimeFilter");
+                return;
+                
             }
             var totalNumpages = getTotalnumPages(response);
             console.log("totalNumresults_global: " + totalNumresults_global);
@@ -154,6 +162,42 @@ function loadMovies(){
     }
 };
 
+
+function autoCompleteloadMovies(){
+    $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
+        function(response){
+            console.log(response);
+        
+            if(response.Error == "Too many results." || response.Error == "Movie not found!"){
+                return;
+            }
+                var autoCompleteArray = [];
+                response.Search.map((movie) => {
+                    var movieEntry = '<li>' + movie.Title + '</li>';
+                autoCompleteArray.push(movieEntry);
+                console.log("autoCompleteArray: ");
+                console.log(autoCompleteArray);
+                displayAutocompleteSuggestions(autoCompleteArray);
+            })
+        })
+    
+};
+
+function displayAutocompleteSuggestions(autoCompleteArray){
+        // console.log("displayAutocompleteSuggestions() activated");
+        // var autoCompleteHTML = autoCompleteArray.map((movie) => {
+        //          `<li > movie </li>`;
+        //     })
+        //     .join('');
+                var movieRecommendationsList = document.getElementById('movieRecommendationsList');
+        //         // movieRecommendationsList[0].innerHTML = autoCompleteHTML;
+        //         console.log("hello");
+        //         $(".autocomBox").html(autoCompleteHTML);
+        let autoCompleteArraystring = autoCompleteArray.join('');
+        movieRecommendationsList.innerHTML = autoCompleteArraystring;
+        
+        
+};
 
 // Function is called upon loading the movie Search page (movieSite.html)
 //receives the user's movie Search made on the details page, re-assigns 
@@ -448,6 +492,11 @@ function displayNoresultsFound(){
     
 };
 
+function displayToomanyResultsfound(){
+    console.log("displayToomanyResultsfound activated");
+    document.getElementById("noResultsFoundtext").innerHTML = "Too Many Results";
+}
+
 function clearElement(elementTag){
     // var moviesListresults = document.getElementsByClassName('moviesList');
     // console.log("clearElement() activated");
@@ -473,6 +522,8 @@ $(document).on( 'keyup', '#timeFilterboxMin', function (e) {
     
     // console.log("minYearparam:" + minYearparam);
 });
+
+
 
 $(document).on( 'keyup', '#timeFilterboxMax', function (e) {
     isFilteredSearch = true;
