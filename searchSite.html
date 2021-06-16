@@ -18,10 +18,17 @@
         <div class="container">
         <header class="header-for-searchArea"
         <nav class="searchBar">
+            <div class = searchBarAreadiv>
             <form onsubmit="loadMovies(); return false;">
                 <input type="text" class="searchBartext" placeholder="Search for a Movie"></input>
-                <div class="autocomplete-box"></div>
+                <div class="autocomBox">
+                    <ul id="movieRecommendationsList"></ul>
+                    
+                </div>
+            </div>
+                <div class ="submitButtondiv">
                 <input type="submit" id="searchButton" value="Search"></input>
+                </div>
             </form>
         </nav>
         </header>
@@ -49,13 +56,11 @@
          </div>
         <script src="siteCode.js"></script>
         <script>
-         // if((searchString_global) !== (null)) {
+         
             loadNextsearchDetailspage();
-            
-            // if (totalNumresults_global >= 50) {
+        
                 displayTimeFilter();
             
-        // }
         </script>
     </body>
 </html>
