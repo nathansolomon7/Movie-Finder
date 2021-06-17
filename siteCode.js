@@ -1,9 +1,10 @@
 //TODO:
-// add a search bar helper that will complete the search for you
 //ERRORS: 
-//figure out the whole reload searchstring situation. Its messy cuz it conflicts with the use 
-// of the details page search bar and its error handling.
-//perhaps make two functions. one for page load and one for search bar search if possible?
+//ON GRAND FUNCTION LOAD, CLEAR THE SEARCH BAR SO NO ONE ATTEMPTS TO PRESS SEARCH WHEN THE SEARCH 
+//BAR HAS A STRING IN IT BUT NO ONE TO TYPE IT IN
+// ASK WHETHER OR NOT THE SHOW MORE FUNCTIONALITY IS A SHOW ALL FUNCTIONALITY OR SHOW 50 MORE TITLES 
+// WHILE KEEPING PAIGANATION
+//ASK IF PAIGNATION SHOULD BE KEPT WITH TIME FILTERED SEARCH
 
 
 
@@ -45,6 +46,7 @@ for(var x = 0; x < searchBartextValues.length; x++) {
 
 function loadMovies(){
     try{
+        console.log("isgetRidofFilterSearch is:" + isgetRidofFilterSearch);
         console.log("running loadMovies()");
         console.log(searchString_global);
         console.log("above is searchString_global in the loadMovies function");
@@ -130,7 +132,7 @@ function loadMovies(){
             }
             
             if (isFilteredSearch == false && isnoResultsFoundfiltered == false){
-                if(isgetRidofFilterSearch == false){
+                if(isgetRidofFilterSearch == false && totalNumresults_global > 10){
                     displayTimeFilter();
                 }
                 
@@ -185,7 +187,7 @@ function autoCompleteloadMovies(){
 
 function displayAutocompleteSuggestions(autoCompleteArray){
         
-        var movieRecommendationsList = document.getElementById('movieRecommendationsList');
+        var movieRecommendationsList = document.getElementsByClassName('movieRecommendationsList');
         
             const autoCompleteArrayHTML = autoCompleteArray.map((movie) => {
                     return `
@@ -194,7 +196,7 @@ function displayAutocompleteSuggestions(autoCompleteArray){
             }).join('');
         
         
-        movieRecommendationsList.innerHTML = autoCompleteArrayHTML;
+        movieRecommendationsList[0].innerHTML = autoCompleteArrayHTML;
         
         
 };
@@ -210,22 +212,27 @@ function loadNextsearchDetailspage(){
     var nextMovieSearch = sessionStorage.getItem('nextMovieSearch');
     console.log("nextMovieSearch: " + nextMovieSearch);
     console.log("is nextMovieSearch undefined:" + (nextMovieSearch == "undefined"));
+    searchString_global = nextMovieSearch;
     
-    
-    if(nextMovieSearch === "undefined"){
+    if(nextMovieSearch == "undefined"){
         var previousSearch = sessionStorage.getItem('currentMoviesearchTemp');
         
         console.log("previousSearch:" + previousSearch)
         searchString_global = previousSearch;
     }
-    else{
-        searchString_global = nextMovieSearch;
+    if(previousSearch == ""){
+        console.log("previousSearch is empty")
+        isgetRidofFilterSearch = true;
+        clearElement("#numResultsDisplay");
+        return;
     }
-        //FIGURE OUT WHY NOT WORKING
-        
+    
         console.log("searchString_global value at end of grandLoad function:" + searchString_global);
     
         loadMovies();
+        //FIGURE OUT WHY NOT WORKING
+        
+        
     
     
 };
@@ -439,7 +446,7 @@ function showMoreresults(currentPagenum, currentResponse){
                     else{
                         console.log("entered the else statement of showMoreresults()");
                         if(isFilteredSearch == true){
-                            console.log()
+                            console.log(concatResponse)
                              filterResponsebyYear(concatResponse);
                             console.log("filtered concatResponse (now timeFilteredResponse_global): ");
                             console.log(timeFilteredResponse_global);
@@ -540,6 +547,48 @@ $(document).on( 'keyup', '#timeFilterboxMax', function (e) {
     }
 });
 
+// var isBodyclicked = false;
+
+$('.container').click( function() {
+    // isBodyclicked = true;
+    // if (isBodyclicked == true){
+        $('.autocomBox').hide();
+    //     isBodyclicked = false;
+    // }
+});
+
+$('#showcase').click( function() {
+    // isBodyclicked = true;
+    // if (isBodyclicked == true){
+        $('.autocomBox').hide();
+    //     isBodyclicked = false;
+    // }
+});
+
+$('#numResultsDisplay').click( function() {
+    // isBodyclicked = true;
+    // if (isBodyclicked == true){
+        $('.autocomBox').hide();
+    //     isBodyclicked = false;
+    // }
+});
+
+$('#containerTimeFilter').click( function() {
+    // isBodyclicked = true;
+    // if (isBodyclicked == true){
+        $('.autocomBox').hide();
+    //     isBodyclicked = false;
+    // }
+});
+
+
+
+$('.searchBartext').keypress( function() {
+    // isBodyclicked = false;
+    // if (isBodyclicked == false){
+        $('.autocomBox').show();
+    // }
+});
 
 
 
