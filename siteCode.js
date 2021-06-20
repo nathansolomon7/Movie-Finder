@@ -29,7 +29,7 @@
  var arrayOfTensLength;
  var showMoreFiltercount = 0;
  var tempCount = 1;
- var loadMoviesCounter = 0;
+ var loadMoviesCounter;
  // isLessTenresults = false;
  // used in the API request to display the according "page" of movie search results
  var pageNum = 1;
@@ -54,8 +54,10 @@ function loadMovies(){
     try{
         console.log("running loadMovies()");
         console.log("pageNum in loadMovies(): " + pageNum);
+        console.log("loadMoviesCounter before: " + loadMoviesCounter);
         loadMoviesCounter++;
-        if(loadMoviesCounter == 2){
+        console.log("loadMoviesCounter after: " + loadMoviesCounter);
+        if(loadMoviesCounter == 1){
             console.log("about to change the value of pageNum to 1");
             if (pageNum != 1){
                 pageNum = 1;
@@ -444,6 +446,21 @@ function displayNumresults(totalNumresults_global){
           
 };
 
+function displayNumresultsFiltered(totalNumresults_global){
+    // var numResultsDisplay = document.getElementById("numResultsDisplay").innerHTML;
+        if (totalNumresults_global == 1){
+            document.getElementById("numResultsDisplay").innerHTML = "Showing " + totalNumresults_global + " result on this page";
+        }
+        else {
+            document.getElementById("numResultsDisplay").innerHTML = "Showing " + totalNumresults_global + " results on this page";
+        }
+          
+};
+
+
+
+
+
 
 
 
@@ -553,6 +570,9 @@ function filterSearchpaganation(currentResponseArray){
         }
         isEndReachedShowMore = false;
     }
+    
+    console.log("currentResponseArray passed in before going into API call: ");
+    console.log(currentResponseArray);
     isFilteredSearch = true;
     console.log("pageNum in filterSearchpaganation(): " + pageNum);
             $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
@@ -603,7 +623,7 @@ function filterSearchpaganation(currentResponseArray){
 
 function conditionalDisplayfilteredResults(concatFilteredArray_global){
     console.log("inside conditionalDisplayfilteredResults()");
-    displayNumresults(concatFilteredArray_global.length);
+    displayNumresultsFiltered(concatFilteredArray_global.length);
     if(concatFilteredArray_global.length > 10){
         var concatTenarray = concatFilteredArray_global.splice(0,10);
         concatTenarray_global = concatTenarray;
@@ -659,6 +679,10 @@ function createShowMoreButton(){
 }
 
 
+
+
+
+
 //FIX HTML TAG ATTACHMENT
 function displayNoresultsFound(){
     console.log("displayNoresultsFound() activated");
@@ -699,6 +723,8 @@ $(".searchForm").submit(function(){
 
 $(document).on( 'keyup', '#timeFilterboxMin', function (e) {
     isFilteredSearch = true;
+    loadMoviesCounter = 0;
+    pageNum = 1;
     var minYearparam = (e.target.value);
     minYearparam_global = minYearparam;
     if (e.keyCode == 8) {
@@ -718,6 +744,8 @@ $(document).on( 'keyup', '#timeFilterboxMin', function (e) {
 
 $(document).on( 'keyup', '#timeFilterboxMax', function (e) {
     isFilteredSearch = true;
+    loadMoviesCounter = 0;
+    pageNum = 1;
     if (e.keyCode == 8) {
         pageNum = 1;
         isgetRidofFilterSearch = true;
