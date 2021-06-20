@@ -1,9 +1,6 @@
 //TODO: 
 
-//STAR WARS 1970-2020 YIELDS 19 RESULTS. USE FOR SHOW MORE TESTING
-
-
-//ASK IF PAIGNATION SHOULD BE KEPT WITH TIME FILTERED SEARCH
+//change the results for filtered to say "..on this page"
 
 //RE COMMENT THINGS
 
@@ -32,6 +29,7 @@
  var arrayOfTensLength;
  var showMoreFiltercount = 0;
  var tempCount = 1;
+ var loadMoviesCounter = 0;
  // isLessTenresults = false;
  // used in the API request to display the according "page" of movie search results
  var pageNum = 1;
@@ -54,6 +52,17 @@ for(var x = 0; x < searchBartextValues.length; x++) {
 
 function loadMovies(){
     try{
+        console.log("running loadMovies()");
+        console.log("pageNum in loadMovies(): " + pageNum);
+        loadMoviesCounter++;
+        if(loadMoviesCounter == 2){
+            console.log("about to change the value of pageNum to 1");
+            if (pageNum != 1){
+                pageNum = 1;
+            }
+        }
+        console.log("pageNum in loadMovies after check: " + pageNum);
+        isFilteredSearch = false;
         isnoResultsFoundfiltered = false;
         console.log("isgetRidofFilterSearch is:" + isgetRidofFilterSearch);
         console.log("running loadMovies()");
@@ -69,22 +78,12 @@ function loadMovies(){
                 response_global = response;
             console.log(response);
             if(response.Error == "Movie not found!"){
-                displayNumresults(0);
-                displayNoresultsFound();
-                clearElement("#moviesList");
-                clearElement("#paginationWrapper");
-                removeShowmoreButton();
-                clearElement("#containerTimeFilter");
+                clearScreenforNoresults();
                 isnoResultsFoundfiltered = false;
                 return;
             }
             if(response.Error == "Too many results."){
-                displayNumresults(0);
-                displayToomanyResultsfound();
-                clearElement("#moviesList");
-                clearElement("#paginationWrapper");j
-                removeShowmoreButton();
-                clearElement("#containerTimeFilter");
+                clearScreeenforToomanyResults();
                 return;
                 
             }
@@ -179,6 +178,24 @@ function loadMovies(){
      catch(err) {
         console.error(err);
     }
+};
+
+function clearScreenforNoresults(){
+    displayNumresults(0);
+    displayNoresultsFound();
+    clearElement("#moviesList");
+    clearElement("#paginationWrapper");
+    removeShowmoreButton();
+    clearElement("#containerTimeFilter");
+};
+
+function clearScreeenforToomanyResults(){
+    displayNumresults(0);
+    displayToomanyResultsfound();
+    clearElement("#moviesList");
+    clearElement("#paginationWrapper");j
+    removeShowmoreButton();
+    clearElement("#containerTimeFilter");
 };
 
 
@@ -665,6 +682,19 @@ function clearElement(elementTag){
     // }
     $(elementTag).empty();
 };
+
+$('.container').click( function() {
+    // isBodyclicked = true;
+    // if (isBodyclicked == true){
+        $('.autocomBox').hide();
+    //     isBodyclicked = false;
+    // }
+});
+
+$(".searchForm").submit(function(){
+  pageNum = 1;
+});
+
 
 
 $(document).on( 'keyup', '#timeFilterboxMin', function (e) {
