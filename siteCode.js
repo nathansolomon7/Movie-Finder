@@ -1,11 +1,11 @@
-//TODO:
-//ERRORS: 
-//ON GRAND FUNCTION LOAD, CLEAR THE SEARCH BAR SO NO ONE ATTEMPTS TO PRESS SEARCH WHEN THE SEARCH 
-//BAR HAS A STRING IN IT BUT NO ONE TO TYPE IT IN
-// ASK WHETHER OR NOT THE SHOW MORE FUNCTIONALITY IS A SHOW ALL FUNCTIONALITY OR SHOW 50 MORE TITLES 
-// WHILE KEEPING PAIGANATION
+//TODO: 
+
+//STAR WARS 1970-2020 YIELDS 19 RESULTS. USE FOR SHOW MORE TESTING
+
+
 //ASK IF PAIGNATION SHOULD BE KEPT WITH TIME FILTERED SEARCH
 
+//RE COMMENT THINGS
 
 
 
@@ -18,12 +18,20 @@
  var maxYearparam_global;
  var minYearparam_global;
  var isFilteredSearch = false;
- var timeFilteredResponse_global;
  var isShowMoreclicked = false;
  var isPaganationremoved = false;
  var isShowmoreButtonremoved = false;
  var isnoResultsFoundfiltered = false;
  var isgetRidofFilterSearch = false;
+ var isMoretenFilteredresults = false;
+ var isEndReachedShowMore = false;
+ var startingPageNum;
+ var response_global;
+ var concatFilteredArray_global;
+ var concatTenarray_global;
+ var arrayOfTensLength;
+ var showMoreFiltercount = 0;
+ var tempCount = 1;
  // isLessTenresults = false;
  // used in the API request to display the according "page" of movie search results
  var pageNum = 1;
@@ -46,6 +54,7 @@ for(var x = 0; x < searchBartextValues.length; x++) {
 
 function loadMovies(){
     try{
+        isnoResultsFoundfiltered = false;
         console.log("isgetRidofFilterSearch is:" + isgetRidofFilterSearch);
         console.log("running loadMovies()");
         console.log(searchString_global);
@@ -57,21 +66,23 @@ function loadMovies(){
          }
         $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
             function(response){
+                response_global = response;
             console.log(response);
             if(response.Error == "Movie not found!"){
                 displayNumresults(0);
                 displayNoresultsFound();
                 clearElement("#moviesList");
-                clearElement("#pagination-wrapper");
+                clearElement("#paginationWrapper");
                 removeShowmoreButton();
                 clearElement("#containerTimeFilter");
+                isnoResultsFoundfiltered = false;
                 return;
             }
             if(response.Error == "Too many results."){
                 displayNumresults(0);
                 displayToomanyResultsfound();
                 clearElement("#moviesList");
-                clearElement("#pagination-wrapper");
+                clearElement("#paginationWrapper");j
                 removeShowmoreButton();
                 clearElement("#containerTimeFilter");
                 return;
@@ -82,30 +93,21 @@ function loadMovies(){
             displayNumresults(totalNumresults_global);
             
             if ((isFilteredSearch == true) && (maxYearparam_global > 999)){
-                console.log("isFilteredSearch andMaxYearparam is true");
-                showMoreresults(pageNum, response);
-                console.log("timeFilteredResponse_global:");
-                console.log(timeFilteredResponse_global);
-                // var filteredNumresults = timeFilteredResponse_global.length;
-                // console.log("timeFilteredResponse_global.length: " + filteredNumresults);
-                displayNumresults(filteredNumresults);
-                console.log("isnoResultsFoundfiltered is: " + isnoResultsFoundfiltered);
-                // if (isnoResultsFoundfiltered == true){
-                //      displayNoresultsFound();
-                //     $("#containerTimeFilter").empty();
-                // }
+                if(timeFilteredResponse_global.length < 10){
+                    $("#nextPagebutton").remove();
+                    $("#prevPagebutton").remove();
+                }
                 isFilteredSearch = false;
                 return;
-                
-                // response = timeFilteredResponse_global;
-                // displayMoviesFiltered(response);
+                console.log("made it past return in filterSearch (bad)");
+            
             }
             
-            if(totalNumresults_global < 10){
+            if(totalNumresults_global < 10 ){
                 removeShowmoreButton();
                 removePaganationbuttons();
             }
-            //FIGURE OUT WHY NOT WORKING
+            
             console.log("pageNum value: " + pageNum);
             if(pageNum == totalNumpages_global){
                 console.log("removeremoveShowmoreButton() activated for pageNum == totalNumpages_global");
@@ -117,14 +119,16 @@ function loadMovies(){
             console.log(totalNumpages);
             if(isnoResultsFoundfiltered == true){
                 displayNoresultsFound();
-                clearElement("#pagination-wrapper");
+                removePaganationbuttons();
+                $("#paginationWrapper").remove();
                 clearElement("#showMorebutton");
+                return;
                  
             }
             // function is called to then display the movies on the page
             if(isFilteredSearch == false && isnoResultsFoundfiltered == false){
                 clearElement("#noResultsFoundtext");
-                clearElement("#pagination-wrapper");
+                clearElement("#paginationWrapper");
                 clearElement("#showMorebutton");
                 if (searchString_global != null || searchString_global != undefined){
                 displayMovies(response);
@@ -132,15 +136,29 @@ function loadMovies(){
             }
             
             if (isFilteredSearch == false && isnoResultsFoundfiltered == false){
+                console.log("made it here");
                 if(isgetRidofFilterSearch == false && totalNumresults_global > 10){
                     displayTimeFilter();
+                }
+                else if(totalNumresults_global < 10){
+                    $("#containerTimeFilter").remove();
                 }
                 
                 if(totalNumresults_global > 10 && (searchString_global != null || searchString_global != undefined)){
                     if(pageNum != totalNumpages_global){
                         createShowMoreButton();
                     }
+                    
                     generatePagebuttons(totalNumpages_global);
+                    if(pageNum == 1){
+                        $("#prevPagebutton").remove();
+                    }  if(pageNum == totalNumpages_global){
+                        $("#nextPagebutton").remove();
+                    }
+                    if(isnoResultsFoundfiltered == true){
+                        $("#paginationWrapper").remove();
+                    }
+                    
                 }
                 
             }
@@ -154,7 +172,6 @@ function loadMovies(){
             isnoResultsFoundfiltered = false;
             isLessTenresults = false;
             isgetRidofFilterSearch = false;
-            pageNum = 1;
             });
             
     }
@@ -230,7 +247,7 @@ function loadNextsearchDetailspage(){
         console.log("searchString_global value at end of grandLoad function:" + searchString_global);
     
         loadMovies();
-        //FIGURE OUT WHY NOT WORKING
+        
         
         
     
@@ -291,22 +308,53 @@ function getTotalnumPages(response){
 
 //generates the pagination buttons that the user sees on the movieSite page
 function generatePagebuttons(totalNumpages_global) {
-    var wrapper = document.getElementById('pagination-wrapper');
-    wrapper.innerHTML = '';
+    let htmlStringdetails = 
+    `<button type="button" id="prevPagebutton">Previous</button>
+    <button type="button" id="nextPagebutton">Next</button`;
+    // wrapper.innerHTML = '';
     // each button is given a different value in the ascending order that it is generated in
-    for (var page = 1; page <= totalNumpages_global; page++) {
-        wrapper.innerHTML += `<button type="button" value=${page} class="page-buttons">${page}</button>`
-    }
-}
+        paginationWrapper.innerHTML = htmlStringdetails;
+};
 
 //when a paigination button is clicked, pageNum's value is updated with the 
 //pagination button's value. AN API request is sent with the updated pageNum in
 //the loadMovies() function, giving 10 more search results to the user
-$(document).on( 'click', '.page-buttons', function () {
-    pageNum = $(this).val();
+$(document).on( 'click', '#nextPagebutton', function () {
+    pageNum = pageNum + 1;
+    if(isFilteredSearch == true){
+        console.log("made it inside as a filtered search");
+        if(isFilteredSearch == true){
+            filterSearchpaganation(concatFilteredArray_global);
+        } else if(isFilteredSearch == true && concatFilteredArray_global.length <= 10 && pageNum  == totalNumpages_global){
+            $("#nextPagebutton").remove();
+            var filtered10results = concatFilteredArray_global.splice(0,10);
+            displayMoviesFiltered(filtered10results);
+        }
+    }
+    else{
     console.log("totalNumpages_global after click:" + pageNum);
     loadMovies();
-})
+    }
+});
+
+$(document).on( 'click', '#prevPagebutton', function () {
+    pageNum = pageNum - 1;
+    if(isFilteredSearch == true){
+        filterSearchpaganation(concatFilteredArray_global);
+        if(pageNum == 1){
+            $("#prevPagebutton").remove();
+        }
+        else{
+            
+        }
+    } 
+    else{
+    console.log("totalNumpages_global after click:" + pageNum);
+    loadMovies();
+    }
+});
+
+
 
 
 // the movie title that has been clicked on by the user is stored in the user's sessionStorage in the 
@@ -394,14 +442,9 @@ function displayTimeFilter(){
 };
 
 function filterResponsebyYear(response){
-    if (isPaganationremoved == false){
-        removePaganationbuttons();
-    }
-    if (isShowmoreButtonremoved == false){
-        removeShowmoreButton();
-    }
-    console.log("minYearparam_global: "+ minYearparam_global);
-    console.log("maxYearparam_global: "+ maxYearparam_global);
+    // console.log("unfiltered response inside filterResponsebyYear(): ");
+    // console.log(response);
+    
      timeFilteredResponse_global = response.filter(function(movie){
          // console.log("movie.Year: " + movie.Year);
         return (movie.Year >= minYearparam_global && movie.Year <= maxYearparam_global);
@@ -411,69 +454,179 @@ function filterResponsebyYear(response){
         isnoResultsFoundfiltered = true;
         // console.log("isnoResultsFoundfiltered is: " + isnoResultsFoundfiltered);
     }
+    return timeFilteredResponse_global;
 };
 
-var firstResponse;
+var firstResponseArray;
 var concatResponse
 var nextResponse;
-function showMoreresults(currentPagenum, currentResponse){
-    removePaganationbuttons();
-    removeShowmoreButton();
+var startingPageNum;
+function showMoreresults(currentPagenum, firstResponse){
+    
+    console.log("isFilteredSearch is: " + isFilteredSearch);
     isShowMoreclicked = true;
-    // console.log("totalNumpages_global in showMoreresults function: " + totalNumpages_global);
+    firstResponseArray = firstResponse.Search;
+    console.log("first response arrray: ");
+    console.log(firstResponseArray);
+    currentPagenum = currentPagenum + 1;
     $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + currentPagenum).then(
         function(response){
-                nextResponse = response.Search;
-                // console.log("nextResponse (page 2 for first one):")
-                // console.log(nextResponse);
+            nextResponse = response.Search;
+            console.log("next response arrray: ");
+            console.log(nextResponse);
+            concatResponse = firstResponseArray.concat(nextResponse);
+                pageNum ++;
+                console.log("pageNum after showMoreresults(): " + pageNum); 
+                console.log("concatResponse for displayMoviesFiltered");
+                console.log(concatResponse);
                 
-                if (currentPagenum <= totalNumpages_global && currentPagenum == 1){
-                     firstResponse = response.Search;
-                     // console.log("firstResponse (page 1): ");
-                     // console.log(firstResponse);
-                    showMoreresults(currentPagenum + 1, firstResponse);
-                }
-                    if (currentPagenum <= totalNumpages_global && currentPagenum != 1){
-                        concatResponse = currentResponse.concat(nextResponse);
-                        // console.log("currentPagenum: " + currentPagenum);
-                        // console.log("totalNumpages_global: " + totalNumpages_global);
-                        // console.log("currentPagenum: " + currentPagenum);
-                        // console.log("isFilteredSearch is: " + isFilteredSearch);
-                        // console.log("concatResponse:");
-                        // console.log(concatResponse);
-                        showMoreresults(currentPagenum + 1, concatResponse);
+            
+                    displayMoviesFiltered(concatResponse);
+                    if(pageNum == totalNumpages_global){
+                        isEndReachedShowMore = true;
+                        removeShowmoreButton();
+                        $("#nextPagebutton").remove();
+                        pageNum = 1;
                     }
-                    else{
-                        console.log("entered the else statement of showMoreresults()");
-                        if(isFilteredSearch == true){
-                            console.log(concatResponse)
-                             filterResponsebyYear(concatResponse);
-                            console.log("filtered concatResponse (now timeFilteredResponse_global): ");
-                            console.log(timeFilteredResponse_global);
-                            if (timeFilteredResponse_global.length == 0){
-                                console.log("timeFilteredResponse_global.length == 0 and displayNoresultsFound is gonna be ran");
-                                 displayNoresultsFound();
-                            }
-                            displayNumresults(timeFilteredResponse_global.length);
-                            displayMoviesFiltered(timeFilteredResponse_global);
-                        }
-                        else{
-                            displayMoviesFiltered(concatResponse);
-                        }
-                        
-                    }
-                            
-        });
+                   
+            });
         
 };
 
+function showMoreresultsFiltered(){
+     showMoreFiltercount++;
+    if(concatFilteredArray_global.length > 10){
+        var remainingConcatFilteredArray_global = concatFilteredArray_global.splice(0,10);
+        console.log("remainingConcatFilteredArray_global: ");
+        console.log(remainingConcatFilteredArray_global);
+        console.log("concatFilteredArray_global after splicing");
+        console.log(concatFilteredArray_global);
+        if(showMoreFiltercount == 1){
+             arrayOfTensLength = concatTenarray_global.concat(remainingConcatFilteredArray_global);
+            console.log("arrayOfTensLength thats gonna be displayed: ");
+            console.log(arrayOfTensLength);
+            displayMoviesFiltered(arrayOfTensLength);
+        } else{
+            arrayOfTensLength = arrayOfTensLength.concat(remainingConcatFilteredArray_global);
+            displayMoviesFiltered(arrayOfTensLength);
+        }
+    }
+    else if(concatFilteredArray_global.length <= 10){
+        var finalArray = arrayOfTensLength.concat(concatFilteredArray_global);
+        console.log("finalArray thats gonna be displayed: ");
+        console.log(finalArray)
+        displayMoviesFiltered(finalArray);
+            removeShowmoreButton();
+    } 
+    return;
+};
+
+function filterSearchpaganation(currentResponseArray){
+    if(pageNum == 1){
+        $("#prevPagebutton").remove();
+    }
+    
+    if(isEndReachedShowMore == true){
+        createShowMoreButton();
+        generatePagebuttons(totalNumpages_global);
+        
+        if(isnoResultsFoundfiltered == true){
+            $("#paginationWrapper").remove();
+            displayNoresultsFound();
+        }
+        isEndReachedShowMore = false;
+    }
+    isFilteredSearch = true;
+    console.log("pageNum in filterSearchpaganation(): " + pageNum);
+            $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
+                function(response){
+                    
+                     //    if(pageNum <= totalNumpages_global){
+                     //     var nextResponseArray = filterResponsebyYear(response.Search);
+                     //     // console.log("nextResponseArray (filtered Array for first one): ");
+                     //     // console.log(nextResponseArray);
+                     // }
+                    
+                    if (pageNum == 1 || (currentResponseArray.length <= 10 && pageNum != totalNumpages_global && tempCount == 1)){
+                        tempCount++;
+                        firstResponseArray = filterResponsebyYear(response.Search);
+                        // console.log("firstResponseArray (also filtered Array for first one): ");
+                        // console.log(firstResponseArray);
+                        pageNum++;
+                        filterSearchpaganation(firstResponseArray);
+                    }
+                     
+                     
+                    else if (currentResponseArray.length <= 20 && pageNum <= totalNumpages_global && pageNum != 1 ){
+                         var nextResponseArray = filterResponsebyYear(response.Search);
+                        console.log("pageNum at bottom of loop (should be equal to 2 for first): ");
+                        console.log(pageNum);
+                         concatFilteredArray_global = currentResponseArray.concat(nextResponseArray);
+                         console.log("current concatFilteredArray: ");
+                         console.log(concatFilteredArray_global);
+                         pageNum++;
+                         console.log("pageNum before calling function again: " + pageNum);
+                         console.log("pageNum <= totalNumpages_global:");
+                         console.log(pageNum <= totalNumpages_global);
+                         
+                         filterSearchpaganation(concatFilteredArray_global);
+                    }
+                     else{
+                         console.log("made it to the else statement");
+                         console.log("final concatFilteredArray at ending of function:");
+                         pageNum--;
+                         console.log(concatFilteredArray_global);
+                         conditionalDisplayfilteredResults(concatFilteredArray_global);
+                         return;
+                     }
+                    
+                    
+                });
+}
+
+function conditionalDisplayfilteredResults(concatFilteredArray_global){
+    console.log("inside conditionalDisplayfilteredResults()");
+    displayNumresults(concatFilteredArray_global.length);
+    if(concatFilteredArray_global.length > 10){
+        var concatTenarray = concatFilteredArray_global.splice(0,10);
+        concatTenarray_global = concatTenarray;
+        console.log("concat concatTenarray(whats gonna be filtered): ");
+        console.log(concatTenarray);
+        console.log("concatFilteredArray after being spliced: ");
+        console.log(concatFilteredArray_global);
+        displayMoviesFiltered(concatTenarray);
+        return;
+    }
+    else if(concatFilteredArray_global.length == 0){
+        displayNoresultsFound();
+        $("#moviesList").empty();
+        removeShowmoreButton();
+        $("#nextPagebutton").remove();
+        return;
+    }
+    else if(concatFilteredArray_global.length <= 10){
+        removeShowmoreButton();
+        $("#nextPagebutton").remove();
+        $("#prevPagebutton").remove();
+        displayMoviesFiltered(concatFilteredArray_global);
+        return;
+    }
+};
+            
+
+                        
+
+        
+
 function removePaganationbuttons(){
     isPaganationremoved = true;
-    // var paginationWrapper = document.getElementById('pagination-wrapper');
+    // var paginationWrapper = document.getElementById('paginationWrapper');
     // paginationWrapper.parentNode.removeChild(paginationWrapper);
     // return false;
-    clearElement("#pagination-wrapper");
+    clearElement("#paginationWrapper");
 };
+
+
 
 function removeShowmoreButton(){
     isShowmoreButtonremoved = true;
@@ -519,6 +672,7 @@ $(document).on( 'keyup', '#timeFilterboxMin', function (e) {
     var minYearparam = (e.target.value);
     minYearparam_global = minYearparam;
     if (e.keyCode == 8) {
+        pageNum = 1;
         isgetRidofFilterSearch = true;
         isFilteredSearch = false;
         if(minYearparam_global > 999){
@@ -535,6 +689,7 @@ $(document).on( 'keyup', '#timeFilterboxMin', function (e) {
 $(document).on( 'keyup', '#timeFilterboxMax', function (e) {
     isFilteredSearch = true;
     if (e.keyCode == 8) {
+        pageNum = 1;
         isgetRidofFilterSearch = true;
         isFilteredSearch = false;
         loadMovies();
@@ -543,7 +698,7 @@ $(document).on( 'keyup', '#timeFilterboxMax', function (e) {
     maxYearparam_global = maxYearparam;
     console.log("maxYearparam:" + maxYearparam);
     if(maxYearparam_global > 999){
-    loadMovies();
+    filterSearchpaganation(response_global);
     }
 });
 
@@ -594,8 +749,17 @@ $('.searchBartext').keypress( function() {
 
 
 $(document).on( 'click', '#showMorebutton', function () {
-    isFilteredSearch = false;
-    showMoreresults(pageNum, nextResponse);
+    // isFilteredSearch = false;
+    startingPageNum = pageNum;
+    isShowMoreresults = true;
+    if(isFilteredSearch == true){
+        console.log("about to active showMoreresultsFiltered()");
+        showMoreresultsFiltered();
+    }
+    else{
+        showMoreresults(pageNum, response_global);
+    }
+    
 });
 
 
