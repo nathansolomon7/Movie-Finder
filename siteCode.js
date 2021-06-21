@@ -1,12 +1,3 @@
-//TODO: 
-
-//change the results for filtered to say "..on this page"
-
-//RE COMMENT THINGS
-
-
-
-
 
  //used to get a user's text inputted into the search bar
  var searchString_global;
@@ -35,8 +26,7 @@
  // used in the API request to display the according "page" of movie search results
  var pageNum = 1;
  
- console.log("running program:");
- console.log("searchString_global:" + searchString_global);
+ 
 // the user's text in the search bar is set to searchStringtemp and is constantly updated 
 //upon each key press without them pressing the submit button
 var searchBartextValues = document.getElementsByClassName('searchBartext');
@@ -46,7 +36,6 @@ for(var x = 0; x < searchBartextValues.length; x++) {
         loadMoviesCounter = 0;
         // searchStringtemp value is passed to global variable for other functions to access the string
         searchString_global = searchStringtemp;
-        console.log(searchString_global);
         autoCompleteloadMovies();
     });
 }
@@ -54,27 +43,18 @@ for(var x = 0; x < searchBartextValues.length; x++) {
 
 function loadMovies(){
     try{
-        console.log("running loadMovies()");
-        console.log("pageNum in loadMovies(): " + pageNum);
-        console.log("loadMoviesCounter before: " + loadMoviesCounter);
         //counter is used to handle an edge case where the PageNum is not equal to 1 
         // as it should upon calling loadMovies() if the user does not clear out their
         // filter search boxes prior to making a standard search
         loadMoviesCounter++;
-        console.log("loadMoviesCounter after: " + loadMoviesCounter);
+        
         if(loadMoviesCounter == 1){
-            console.log("about to change the value of pageNum to 1");
             if (pageNum != 1){
                 pageNum = 1;
             }
         }
-        console.log("pageNum in loadMovies after check: " + pageNum);
         isFilteredSearch = false;
         isnoResultsFoundfiltered = false;
-        console.log("isgetRidofFilterSearch is:" + isgetRidofFilterSearch);
-        console.log("running loadMovies()");
-        console.log(searchString_global);
-        console.log("above is searchString_global in the loadMovies function");
         
         // if the page is reloaded (causing the script to forget what the user typed in), 
         // whatever the user clicked on for details previously will be used instead as the 
@@ -85,7 +65,7 @@ function loadMovies(){
         $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
             function(response){
                 response_global = response;
-            console.log(response);
+            
             if(response.Error == "Movie not found!"){
                 // will print "No Results Found if no results found"
                 clearScreenforNoresults();
@@ -99,7 +79,6 @@ function loadMovies(){
                 
             }
             var totalNumpages = getTotalnumPages(response);
-            console.log("totalNumresults_global: " + totalNumresults_global);
             //displays how many results are available for the user to go through across all pages for standard search
             displayNumresults(totalNumresults_global);
             
@@ -111,17 +90,12 @@ function loadMovies(){
                 removePaganationbuttons();
             }
             
-            console.log("pageNum value: " + pageNum);
             if(pageNum == totalNumpages_global){
-                console.log("removeremoveShowmoreButton() activated for pageNum == totalNumpages_global");
+                
                 // remove the showMore button if there are no more pages left to access
                 removeShowmoreButton();
             }
     
-            console.log("totalNumpages:");
-            console.log(totalNumpages);
-            
-            
             if(isFilteredSearch == false && isnoResultsFoundfiltered == false){
                 //clears the page of the showMore and paganation buttons before 
                 //being dynamically generated if the amount of results meet 
@@ -136,7 +110,6 @@ function loadMovies(){
             }
             
             if (isFilteredSearch == false && isnoResultsFoundfiltered == false){
-                console.log("made it here");
                 if(isgetRidofFilterSearch == false && totalNumresults_global > 10){
                     // if the number of results is greater than 10, a time filter is given
                     // to the user so they have the option to do a filter search on top 
@@ -216,7 +189,6 @@ function clearScreeenforToomanyResults(){
 function autoCompleteloadMovies(){
     $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
         function(response){
-            console.log(response);
         
             if(response.Error == "Too many results." || response.Error == "Movie not found!"){
                 return;
@@ -225,8 +197,6 @@ function autoCompleteloadMovies(){
                 response.Search.map((movie) => {
                     
                 autoCompleteArray.push(movie.Title);
-                console.log("autoCompleteArray: ");
-                console.log(autoCompleteArray);
                 displayAutocompleteSuggestions(autoCompleteArray);
             })
         })
@@ -258,24 +228,20 @@ function loadNextsearchDetailspage(){
     isnoResultsFoundfiltered = false;
     //the movie search that the user typed in the search bar on the details page
     var nextMovieSearch = sessionStorage.getItem('nextMovieSearch');
-    console.log("nextMovieSearch: " + nextMovieSearch);
-    console.log("is nextMovieSearch undefined:" + (nextMovieSearch == "undefined"));
     searchString_global = nextMovieSearch;
     
     if(nextMovieSearch == "undefined"){
         var previousSearch = sessionStorage.getItem('currentMoviesearchTemp');
         
-        console.log("previousSearch:" + previousSearch)
+    
         searchString_global = previousSearch;
     }
     if(previousSearch == ""){
-        console.log("previousSearch is empty")
         isgetRidofFilterSearch = true;
         clearElement("#numResultsDisplay");
         return;
     }
     
-        console.log("searchString_global value at end of grandLoad function:" + searchString_global);
     
         loadMovies();
         
@@ -356,16 +322,12 @@ function generatePagebuttons(totalNumpages_global) {
 $(document).on( 'click', '#nextPagebutton', function () {
     pageNum = pageNum + 1;
     if(isFilteredSearch == true){
-        console.log("made it inside as a filtered search");
         if(isFilteredSearch == true){
             generatePagebuttons();
             if(pageNum == 1){
                 $("#prevPagebutton").remove();
             }
-            console.log("pageNum: " + pageNum);
             startingPageNumArray.push(pageNum);
-            console.log("startingPageNumArray after being pushed: ")
-            console.log(startingPageNumArray);
             // instead of creating a new API call with an updated page number like 
             // in the standard search, the remaining spliced array of show movies 
             // not displayed is conctanated upon to eventually be displayed in the next 
@@ -378,7 +340,6 @@ $(document).on( 'click', '#nextPagebutton', function () {
         }
     }
     else{
-    console.log("totalNumpages_global after click:" + pageNum);
     loadMovies();
     }
 });
@@ -391,16 +352,11 @@ $(document).on( 'click', '#prevPagebutton', function () {
      
     tempCountprev++;
     if(isFilteredSearch == true){
-        console.log("startingPageNumArray: ");
-        console.log(startingPageNumArray);
         var index = startingPageNumArray.length - tempCountprev;
         pageNum = startingPageNumArray[index - 1];
         if(pageNum == "undefined" || pageNum == undefined){
             pageNum = 1;
         }
-        console.log("startingPageNumArray after being popped: ");
-        console.log(startingPageNumArray);
-        console.log("pageNum after pressing prev: " + pageNum);
         filterSearchpaganation(concatFilteredArray_global);
         if(pageNum == 1){
             $("#prevPagebutton").remove();
@@ -408,7 +364,6 @@ $(document).on( 'click', '#prevPagebutton', function () {
     } 
     else{
         pageNum--;
-    console.log("totalNumpages_global after click:" + pageNum);
     loadMovies();
     }
 });
@@ -445,7 +400,6 @@ function displayMoviedetails() {
     let movieTitle = sessionStorage.getItem('movieTitle');
     // API movie TITLE request is sent using the movieTitle variable that was retreived above 
     $.getJSON('https://www.omdbapi.com/?t=' + movieTitle + '&apikey=ae410769').then(function(response){
-        console.log(response);
     // HTML is dynamically generated onto details page as the singular object (response), which is the 
     // movie, is used to display its instances
     let htmlStringdetails =
@@ -501,7 +455,6 @@ function displayNumresultsFiltered(totalNumresults_global){
 
 //displays the HTML for the time filter
 function displayTimeFilter(){
-    console.log("now inside displayTimeFilter() function");
     let timeFilterHTML =
         `<p id="searchByYear-timeFilter">Filter Search By Year: </p>
         <input id = "timeFilterboxMin" placeholder = "ex: 2000"></input>
@@ -517,7 +470,6 @@ function filterResponsebyYear(response){
      timeFilteredResponse_global = response.filter(function(movie){
          
         return (movie.Year >= minYearparam_global && movie.Year <= maxYearparam_global);
-        console.log((movie.Year >= minYearparam_global && movie.Year <= maxYearparam_global));
     })
     if (timeFilteredResponse_global.length == 0){
         isnoResultsFoundfiltered = true;
@@ -533,20 +485,15 @@ var startingPageNum;
 
 function showMoreresults(currentPagenum, firstResponse){
     
-    console.log("isFilteredSearch is: " + isFilteredSearch);
     isShowMoreclicked = true;
     //firstResponse holds the first API call for page 1, whose array of movies is 
     //stored in firstResponseArray
     firstResponseArray = firstResponse.Search;
-    console.log("first response arrray: ");
-    console.log(firstResponseArray);
     currentPagenum = currentPagenum + 1;
     $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + currentPagenum).then(
         function(response){
             //nextResponse stores the page 2 of the API call's results
             nextResponse = response.Search;
-            console.log("next response arrray: ");
-            console.log(nextResponse);
             if (currentPagenum == 2){
                 // if its the first time showMore is being pressed, concatanate 
                 // the first page of results with the second page of results
@@ -556,12 +503,7 @@ function showMoreresults(currentPagenum, firstResponse){
                 //combined response with the succeeding page's response to then display to the user
                 concatResponse = concatResponse.concat(nextResponse);
             }
-            
                 pageNum ++;
-                console.log("pageNum after showMoreresults(): " + pageNum); 
-                console.log("concatResponse for displayMoviesFiltered");
-                console.log(concatResponse);
-                
                     // displays the concatanated array to the user when show More is pressed,
                     // thus showing more than 10 results to the user
                     displayMoviesFiltered(concatResponse);
@@ -571,9 +513,7 @@ function showMoreresults(currentPagenum, firstResponse){
                         $("#nextPagebutton").remove();
                         pageNum = 1;
                     }
-                   
             });
-        
 };
 
 function showMoreresultsFiltered(){
@@ -584,17 +524,11 @@ function showMoreresultsFiltered(){
      // only 10 extra at a time
     if(concatFilteredArray_global.length > 10){
         var remainingConcatFilteredArray_global = concatFilteredArray_global.splice(0,10);
-        console.log("remainingConcatFilteredArray_global: ");
-        console.log(remainingConcatFilteredArray_global);
-        console.log("concatFilteredArray_global after splicing");
-        console.log(concatFilteredArray_global);
         if(showMoreFiltercount == 1){
             // if first Show More press, concatanate the most recent 10 movies that were 
             // spliced from the potentially larger array concatFilteredArray_global with 
             // the currently displayed 10 movies
              arrayOfTensLength = concatTenarray_global.concat(remainingConcatFilteredArray_global);
-            console.log("arrayOfTensLength thats gonna be displayed: ");
-            console.log(arrayOfTensLength);
             displayMoviesFiltered(arrayOfTensLength);
         } else{
             // if not the first time Show More is pressed, concatanate what is already 
@@ -608,8 +542,6 @@ function showMoreresultsFiltered(){
         // displayed with the concatFilteredArray_global and save in a different variable 
         // that can not be used again for concatanation
         var finalArray = arrayOfTensLength.concat(concatFilteredArray_global);
-        console.log("finalArray thats gonna be displayed: ");
-        console.log(finalArray)
         displayMoviesFiltered(finalArray);
             removeShowmoreButton();
     } 
@@ -632,10 +564,7 @@ function filterSearchpaganation(currentResponseArray){
         isEndReachedShowMore = false;
     }
     
-    console.log("currentResponseArray passed in before going into API call: ");
-    console.log(currentResponseArray);
     isFilteredSearch = true;
-    console.log("pageNum in filterSearchpaganation(): " + pageNum);
             $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
                 function(response){
                     
@@ -647,8 +576,6 @@ function filterSearchpaganation(currentResponseArray){
                     if (pageNum == 1 || (currentResponseArray.length <= 10 && pageNum != totalNumpages_global && tempCount == 1)){
                         tempCount++;
                         firstResponseArray = filterResponsebyYear(response.Search);
-                        // console.log("firstResponseArray (also filtered Array for first one): ");
-                        // console.log(firstResponseArray);
                         pageNum++;
                         filterSearchpaganation(firstResponseArray);
                     }
@@ -659,23 +586,12 @@ function filterSearchpaganation(currentResponseArray){
                      // filtered results. this loop continues recursively until the current array surpasses 20 movies
                     else if (currentResponseArray.length <= 20 && pageNum <= totalNumpages_global && pageNum != 1 ){
                          var nextResponseArray = filterResponsebyYear(response.Search);
-                        console.log("pageNum at bottom of loop (should be equal to 2 for first): ");
-                        console.log(pageNum);
                          concatFilteredArray_global = currentResponseArray.concat(nextResponseArray);
-                         console.log("current concatFilteredArray: ");
-                         console.log(concatFilteredArray_global);
                          pageNum++;
-                         console.log("pageNum before calling function again: " + pageNum);
-                         console.log("pageNum <= totalNumpages_global:");
-                         console.log(pageNum <= totalNumpages_global);
-                         
                          filterSearchpaganation(concatFilteredArray_global);
                     }
                      else{
-                         console.log("made it to the else statement");
-                         console.log("final concatFilteredArray at ending of function:");
                          pageNum--;
-                         console.log(concatFilteredArray_global);
                          // the array of 20 is passed into conditionalDisplayfilteredResults
                          // for displaying to user
                          conditionalDisplayfilteredResults(concatFilteredArray_global);
@@ -687,7 +603,6 @@ function filterSearchpaganation(currentResponseArray){
 };
 
 function conditionalDisplayfilteredResults(concatFilteredArray_global){
-    console.log("inside conditionalDisplayfilteredResults()");
     displayNumresultsFiltered(concatFilteredArray_global.length);
     // if the passed in array is greater than 10, splice the first 10 movies and display 
     // them, with the original array having 10 less movies now. The remaining amount 
@@ -695,10 +610,6 @@ function conditionalDisplayfilteredResults(concatFilteredArray_global){
     if(concatFilteredArray_global.length > 10){
         var concatTenarray = concatFilteredArray_global.splice(0,10);
         concatTenarray_global = concatTenarray;
-        console.log("concat concatTenarray(whats gonna be filtered): ");
-        console.log(concatTenarray);
-        console.log("concatFilteredArray after being spliced: ");
-        console.log(concatFilteredArray_global);
         displayMoviesFiltered(concatTenarray);
         return;
     }
@@ -751,16 +662,13 @@ function createShowMoreButton(){
 
 //generates the HTML to say No results Found
 function displayNoresultsFound(){
-    console.log("displayNoresultsFound() activated");
-    // let noResultsFoundHTML =
-    // `<h1 id="No-results-found">No Results Found</h1>`;
-    // noResultsFound.innherHTML = noResultsFoundHTML;
+    
         document.getElementById("noResultsFoundtext").innerHTML = "No Results Found";
     
 };
 //generates the HTML to say too many results
 function displayToomanyResultsfound(){
-    console.log("displayToomanyResultsfound activated");
+
     document.getElementById("noResultsFoundtext").innerHTML = "Too Many Results";
 }
 
@@ -825,7 +733,7 @@ $(document).on( 'keyup', '#timeFilterboxMax', function (e) {
     }
     var maxYearparam = (e.target.value);
     maxYearparam_global = maxYearparam;
-    console.log("maxYearparam:" + maxYearparam);
+    
     generatePagebuttons();
     if(pageNum == 1){
         $("#prevPagebutton").remove();
@@ -888,7 +796,6 @@ $(document).on( 'click', '#showMorebutton', function () {
     if(isFilteredSearch == true){
         // if it is a filtered search and show more button is pressed,
         //showMoreresultsFiltered is called;
-        console.log("about to active showMoreresultsFiltered()");
         showMoreresultsFiltered(concatFilteredArray_global);
     }
     else{
