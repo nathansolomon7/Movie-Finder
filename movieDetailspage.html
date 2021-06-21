@@ -17,12 +17,17 @@
         <div class="container">
         <header class="header-for-searchArea"
         <nav class="searchBar">
-            
+            <div class = searchBarAreadiv>
             <form onsubmit="loadNextsearchHelper(searchString_global); return false;">
                 <input type="text" class="searchBartext" placeholder="Search for a Movie"></input>
+                <div class="autocomBox">
+                    <ul class="movieRecommendationsList"></ul>
+                </div>
+            </div>
+            <div class ="submitButtondiv">
                 <input type="submit" id="searchButton-details" value="Search"><a href="movieSite.html"></a></input>
+            </div>
             </form>
-            
         </nav>
         </header>
     </div>
