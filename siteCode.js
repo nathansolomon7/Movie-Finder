@@ -400,6 +400,8 @@ function displayMoviedetails() {
     let movieTitle = sessionStorage.getItem('movieTitle');
     // API movie TITLE request is sent using the movieTitle variable that was retreived above 
     $.getJSON('https://www.omdbapi.com/?t=' + movieTitle + '&apikey=ae410769').then(function(response){
+        response = checkforUndefined(response);
+        
     // HTML is dynamically generated onto details page as the singular object (response), which is the 
     // movie, is used to display its instances
     let htmlStringdetails =
@@ -447,6 +449,27 @@ function displayNumresultsFiltered(totalNumresults_global){
           
 };
 
+function checkforUndefined(response){
+    if(response.Title == undefined || response.Title == "undefined"){
+        response.Title = "N/A";
+    }
+    if(response.Released == undefined || response.Released == "undefined"){
+        response.Released = "N/A";
+    }
+    if(response.Director == undefined || response.Director == "undefined"){
+        response.Director = "N/A";
+    }
+    if(response.Genre == undefined || response.Genre == "undefined"){
+        response.Genre = "N/A";
+    }
+    if(response.Runtime == undefined || response.Runtime == "undefined"){
+        response.Runtime = "N/A";
+    }
+    if(response.Plot == undefined || response.Plot == "undefined"){
+        response.Plot = "N/A";
+    }
+    return response;
+};
 
 
 
