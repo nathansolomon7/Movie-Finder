@@ -1,0 +1,401 @@
+body{
+    background-color:f4f4f4;
+    color:#555;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size:16px;
+    line-height: 1.6em;
+    margin:0;
+    background-color: black;
+}
+
+.container{
+    width:80%;
+    margin:auto;
+    overflow:hidden;
+    margin-top: 10px;
+    max-height: 150px;
+}
+
+
+
+.submitButtondiv{
+  width:15%;
+  float:right;
+  height:200px;
+  z-index:2;
+}
+
+.header-for-searchArea{
+    width:80%;
+    margin-top:2px;
+    height:auto;
+    height:-5px;
+    display:flex;
+}
+
+
+#paginationWrapper{
+    height: auto;
+    width: 100%;
+    padding-top:10px;
+}
+
+
+#nextPagebutton{
+    cursor:pointer;
+    padding: 8px 16px;
+    margin: 2px 3px; 
+    font-size:25px;
+    width:100px;
+}
+
+#nextPagebutton:hover{
+    color:blue;
+    text-decoration: underline;
+}
+
+#prevPagebutton{
+    cursor:pointer;
+    padding: 8px 16px;
+    margin: 2px 3px; 
+    font-size:25px;
+    width:125px;
+    margin-right: 7px;
+}
+
+#prevPagebutton:hover{
+    color:blue;
+    text-decoration: underline;
+}
+
+
+
+
+
+.col-md-4{
+    display:flex;
+}
+
+.col-md-8 h1{
+    padding-left:30px;
+    line-height: 1.6em;
+    color:black;
+}
+.main-header{
+    background-color:#ffff00;
+    color:#000000;
+    width:100%;
+    
+}
+
+.row{
+    background-color: #d9d9d9;
+    padding:5px;
+}
+
+
+.header-for-searchArea{
+    background-color:black;
+    height:80px;
+    width:100%;
+}
+.searchBar{
+    background-color:#333;
+    color:#fff;
+    list-style:none;
+    width:100%;
+    display:inline-block;
+    padding-left:40px;
+    float:left;
+}
+
+.autocomBox{
+    padding-left: 0px;
+    margin-right: 20px;
+    z-index:2;
+    position: absolute;
+    background-color: white;
+    width:39.1%
+
+}
+
+.searchBarAreadiv{
+     background-color:white;
+     width:49%;
+     margin:0 auto;
+     margin-top:20px;
+     height:46px;
+}
+
+ .autocomBox li{
+  list-style: none;
+  padding: 8px 16px;
+  width: 94.3%;
+  border-radius: 3px;
+  overflow: visible;
+  color:black;
+}
+
+.autocomBox li:hover{
+  background: #efefef;
+  cursor:pointer;
+}
+
+.movieRecommendationsList{
+    padding:0px;
+    margin:0px;
+} 
+
+#numResultsDisplay{
+    padding-bottom: 20px;
+}
+
+#containerTimeFilter{
+    padding-left: 45px;
+    margin-left: 15px;
+}
+#timeFilterboxMin{
+    width:60px;
+    height:40px;
+    font-size: 20px;
+}
+
+#timeFilterboxMin::placeholder{
+    font-size: 15px;
+}
+
+#timeFilterboxMax{
+    width:60px;
+    height:40px;
+    font-size: 20px;
+}
+
+#to-in-TimeFilter{
+    padding-left:20px;
+}
+
+#searchByYear-timeFilter{
+    font-size:20px;
+}
+
+#timeFilterboxMax::placeholder{
+    font-size: 15px;
+}
+
+#showMorebuttonDiv{
+    padding-top:25px;
+    padding-bottom:20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#paginationWrapper{
+    padding-bottom:25px;
+    padding-left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#containerTimeFilter{
+    color:white;
+    padding-left: 30px;
+}
+
+
+#showMorebutton{
+    display:inline-block;
+    display:block;
+    width:290px;
+    height:70px;
+    font-size:30px;
+    font-weight: bold;
+}
+
+
+#showMorebutton:hover{
+    cursor:pointer;
+}
+
+
+#noResultsFoundtext{
+    text-align: center;
+    color:white;
+}
+
+#numResultsDisplay{
+    padding-left: 43px;
+}
+
+#No-results-found h1{
+    color:white;
+}
+
+#searchButton{
+    float:right;
+    position:relative;
+    background: white; 
+    margin-bottom:80px;
+    font-size:20px;
+    cursor:pointer;
+    padding:6px;
+    display:inline-block;
+    position:absolute;
+    top:0;
+    right:0;
+    margin-right: 160px;
+    margin-top:5px;
+    
+    
+    
+     
+    
+}
+
+#searchButton:hover{
+    color:blue;
+}
+
+#searchButton-details{
+    float:right;
+    margin-right: 230px;
+    margin-top:25px;
+    margin-bottom:40px;
+    font-size:20px;
+    cursor:pointer;
+    display: block;
+    padding:4px;
+    display:block;
+    text-align: center;
+}
+
+#searchButton-details:hover{
+    color:blue;
+}
+
+.searchBartext{
+    width:94%;
+    height:32px;
+    padding:5px 15px;
+    padding-bottom: 5px;
+    font-size:20px;
+}
+
+
+#showcase{
+    background-position:center right;
+    min-height:70px;
+    margin-bottom:0px;
+    text-align: center;
+    padding-right: 40px;
+    max-height: 150px;
+    z-index: 1;
+}
+
+#showcase h2{
+    color:white;
+    font-size:40px;
+    line-height:1.6em;
+    padding-top:0px;
+    padding-bottom:15px;
+    text-align:center;
+}
+
+#main{
+    float:left;
+    width: 100%;
+    padding: 100px 30px;
+    box-sizing:border-box;
+    background-color:white;
+    position:relative;
+    top:-100px;
+}
+
+#moviesList {
+    padding-inline-start: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    grid-gap: 20px;
+    width:96%;
+    margin:auto;
+    overflow:hidden;
+}
+
+.movieDetails{
+    color: black;
+    font-size: 20px;
+    list-style-type: none;
+    font-family: Helvetica, Arial, sans-serif;
+    padding-left: 30px;
+}
+
+#movieDetails{
+    padding-right:30px;
+}
+
+#movieDetails img {
+    max-width: 300px;
+    max-height:450px;
+}
+
+.movie {
+    list-style-type: none;
+    background-color: #eaeaea;
+    border-radius: 3px;
+    padding: 25px 25px;
+    display: grid;
+    grid-template-rows: 1fr 3fr;
+    text-align: center;
+    border-style: solid;
+    border-color:black;
+    border-width:2px;
+}
+.movie h2{
+    color:black;
+}
+.movie:hover{
+    cursor:pointer;
+}
+
+.movie h2:hover{
+    color:blue;
+}
+
+ .movieTitlebutton {
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    margin-right: 5px;
+    font-size: 25px;
+    line-height: 1.6em;
+}
+
+a{
+    /* to get rid of underline for links*/
+    text-decoration:none;
+    color:#000;
+}
+
+a:hover{
+    color:blue;
+}
+
+
+.movie img {
+    max-height: 400px;
+    max-width:250px;
+    margin-bottom:20px;
+   height: auto; 
+   margin: auto; 
+}
+
+
+#main-footer{
+    background:#333;
+    color:#fff;
+    text-align:center;
+    padding:.5px;
+    margin-top:40px;
+}
+
+
