@@ -16,22 +16,26 @@
         </header>
         
         <div class="container">
-        <header class="header-for-searchArea"
+        <div class="header-for-searchArea"
         <nav class="searchBar">
+            
             <div class = searchBarAreadiv>
             <form onsubmit="loadMovies(); return false;">
                 <input type="text" class="searchBartext" placeholder="Search for a Movie"></input>
+                 
+                
                 <div class="autocomBox">
-                    <ul id="movieRecommendationsList"></ul>
-                    
+                    <ul class="movieRecommendationsList"></ul>
                 </div>
+            
             </div>
-                <div class ="submitButtondiv">
-                <input type="submit" id="searchButton" value="Search"></input>
-                </div>
+            <div class ="submitButtondiv">
+               <input type="submit" id="searchButton-details" value="Search"><a href="movieSite.html"></a></input>
+           </div>
             </form>
         </nav>
-        </header>
+        
+    </div>
         </div>
         
         <section id="showcase">
@@ -40,26 +44,24 @@
             </div>
         </section>
         <h3 id= "numResultsDisplay"> <p id="numResultsvalue"></p></h3>
-        <div id = containerTimeFilter>
+        <div id = "containerTimeFilter">
         
         </div>
             <div id="noResultsFoundcontainer">
                 <h1 id= "noResultsFoundtext"></h1>
             </div>
-        <!-- <input class= "timeFilterbox" placeholder="2000"></input>
-        <p> to </p>
-        <input class= "timeFilterbox" placeholder="2010"></input> -->
+        
          <ul id="moviesList"></ul>
          <div id="showMorebuttonDiv"></div>
-         <!-- onclick="showMoreresults(pageNum, nextResponse)" add this if you wanna use onclick in HTML -->
-         <div id="pagination-wrapper">
+        
+         <div id="paginationWrapper">
          </div>
         <script src="siteCode.js"></script>
         <script>
          
             loadNextsearchDetailspage();
         
-                displayTimeFilter();
+                
             
         </script>
     </body>
