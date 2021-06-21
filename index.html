@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+    <head>    
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <meta charset="utf-8">
+        <title>Movie Finder</title>
+        <link rel="stylesheet" type= "text/css" href="style.css">
+    </head>
+    <body>
+        
+        <header class="main-header">
+            <div class="container">
+                <h1>Movie Finder</h1
+            </div>
+        </header>
+        
+        <div class="container">
+        <div class="header-for-searchArea"
+        <nav class="searchBar">
+            
+            <div class = searchBarAreadiv>
+            <form onsubmit="loadMovies(); return false;">
+                <input type="text" class="searchBartext" placeholder="Search for a Movie"></input>
+                 
+                
+                <div class="autocomBox">
+                    <ul class="movieRecommendationsList"></ul>
+                </div>
+            
+            </div>
+            <div class ="submitButtondiv">
+               <input type="submit" id="searchButton-details" value="Search"><a href="index.html"></a></input>
+           </div>
+            </form>
+        </nav>
+        
+    </div>
+        </div>
+        
+        <section id="showcase">
+            <div class="container">
+                <h2>Search for any movie in the search bar above </h2>
+            </div>
+        </section>
+        <h3 id= "numResultsDisplay"> <p id="numResultsvalue"></p></h3>
+        <div id = "containerTimeFilter">
+        
+        </div>
+            <div id="noResultsFoundcontainer">
+                <h1 id= "noResultsFoundtext"></h1>
+            </div>
+        
+         <ul id="moviesList"></ul>
+         <div id="showMorebuttonDiv"></div>
+        
+         <div id="paginationWrapper">
+         </div>
+        <script src="siteCode.js"></script>
+        <script>
+         
+            loadNextsearchDetailspage();
+        
+                
+            
+        </script>
+    </body>
+</html>
