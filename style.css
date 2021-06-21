@@ -30,27 +30,45 @@ body{
     margin-top:2px;
     height:auto;
     height:-5px;
+    display:flex;
 }
 
 
-#pagination-wrapper{
+#paginationWrapper{
     height: auto;
     width: 100%;
     padding-top:10px;
 }
 
-.page-buttons{
+
+#nextPagebutton{
     cursor:pointer;
     padding: 8px 16px;
-    float: center;
     margin: 2px 3px; 
-    font-size:16px;
+    font-size:25px;
+    width:100px;
 }
 
-.page-buttons:hover{
+#nextPagebutton:hover{
     color:blue;
     text-decoration: underline;
 }
+
+#prevPagebutton{
+    cursor:pointer;
+    padding: 8px 16px;
+    margin: 2px 3px; 
+    font-size:25px;
+    width:125px;
+    margin-right: 7px;
+}
+
+#prevPagebutton:hover{
+    color:blue;
+    text-decoration: underline;
+}
+
+
 
 
 
@@ -99,8 +117,6 @@ body{
     background-color: white;
     width:39.1%
 
-    
-    /* opacity:0; */
 }
 
 .searchBarAreadiv{
@@ -108,18 +124,16 @@ body{
      width:49%;
      margin:0 auto;
      margin-top:20px;
-     
+     height:46px;
 }
 
  .autocomBox li{
   list-style: none;
   padding: 8px 16px;
-  /* display: none; */
   width: 94.3%;
   border-radius: 3px;
   overflow: visible;
   color:black;
-  /* display:none; */
 }
 
 .autocomBox li:hover{
@@ -171,13 +185,19 @@ body{
 #showMorebuttonDiv{
     padding-top:25px;
     padding-bottom:20px;
-    padding-left: 515px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#pagination-wrapper{
+#paginationWrapper{
     padding-bottom:25px;
     padding-left: 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
+
 #containerTimeFilter{
     color:white;
     padding-left: 30px;
@@ -192,6 +212,7 @@ body{
     font-size:30px;
     font-weight: bold;
 }
+
 
 #showMorebutton:hover{
     cursor:pointer;
@@ -215,18 +236,21 @@ body{
     float:right;
     position:relative;
     background: white; 
-    /* margin-right:160px; */
-    /* margin-top:20px; */
-    margin-left: 70px;
-    margin-bottom:100px;
+    margin-bottom:80px;
     font-size:20px;
     cursor:pointer;
     padding:6px;
+    display:inline-block;
+    position:absolute;
+    top:0;
+    right:0;
+    margin-right: 160px;
+    margin-top:5px;
+    
     
     
      
-    /* float:top; */
-    /* text-align: center; */
+    
 }
 
 #searchButton:hover{
@@ -235,11 +259,10 @@ body{
 
 #searchButton-details{
     float:right;
-    margin-right: 160px;
-    margin-top:20px;
+    margin-right: 230px;
+    margin-top:25px;
     margin-bottom:40px;
     font-size:20px;
-    /* border-radius: 8px; */
     cursor:pointer;
     display: block;
     padding:4px;
@@ -256,9 +279,7 @@ body{
     height:32px;
     padding:5px 15px;
     padding-bottom: 5px;
-    /* margin-left:5px; */
     font-size:20px;
-    /* margin-top:5px; */
 }
 
 
@@ -270,7 +291,6 @@ body{
     padding-right: 40px;
     max-height: 150px;
     z-index: 1;
-    /* position:absolute; */
 }
 
 #showcase h2{
@@ -374,14 +394,8 @@ a:hover{
     background:#333;
     color:#fff;
     text-align:center;
-    /*increases the black space surrounding the text*/
     padding:.5px;
     margin-top:40px;
 }
 
-/* @media(max-width:600px){
-    #main{
-        width:100%;
-        float:none;
-    }
-} */
+
