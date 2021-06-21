@@ -219,7 +219,7 @@ function displayAutocompleteSuggestions(autoCompleteArray){
         
 };
 
-// Function is called upon loading the movie Search page (movieSite.html)
+// Function is called upon loading the movie Search page (index.html)
 //receives the user's movie Search made on the details page, re-assigns 
 // searchString_global as the user's movie Search string, then calls loadMovies()
 // function, thus displaying the user its search results without pressing the search button
@@ -306,7 +306,7 @@ function getTotalnumPages(response){
 }
 
 
-//generates the pagination buttons that the user sees on the movieSite page
+//generates the pagination buttons that the user sees on the index.html page
 function generatePagebuttons(totalNumpages_global) {
     let htmlStringdetails = 
     `<button type="button" id="prevPagebutton">Previous</button>
@@ -385,11 +385,11 @@ function loadDetails(movieTitle,previousSearch){
 
 
 
-// stores the user's search to Session Storage to the page displaying all movies (movieSite.html)
+// stores the user's search to Session Storage to the page displaying all movies (index.html)
 // Used while making a search on the movie Details page
 function loadNextsearchHelper(nextMovieSearch){
     sessionStorage.setItem('nextMovieSearch',nextMovieSearch);
-    window.location = 'movieSite.html';
+    window.location = 'index.html';
     return false;
 }
 
