@@ -81,9 +81,7 @@ function loadMovies(){
             var totalNumpages = getTotalnumPages(response);
             //displays how many results are available for the user to go through across all pages for standard search
             displayNumresults(totalNumresults_global);
-            
-            
-            
+        
             if(totalNumresults_global < 10 ){
                 // remove the paganation and showMore buttons if there are less than 10 results for a standard Search
                 removeShowmoreButton();
@@ -108,17 +106,14 @@ function loadMovies(){
                 displayMovies(response);
                 }
             }
-            
-            if (isFilteredSearch == false && isnoResultsFoundfiltered == false){
-                if(isgetRidofFilterSearch == false && totalNumresults_global > 10){
-                    // if the number of results is greater than 10, a time filter is given
-                    // to the user so they have the option to do a filter search on top 
-                    // of their standard search
-                    displayTimeFilter();
-                }
-                else if(totalNumresults_global < 10){
+    
+                 if(totalNumresults_global < 10){
                     // if the number of results is less than 10, the Filter Search option is not given
-                    $("#containerTimeFilter").remove();
+                    $("#containerTimeFilter").hide();
+                }
+                else{
+                    $("#containerTimeFilter").show();
+                     displayTimeFilter();
                 }
                 
                 //Show More option and the paganation buttions are shown if number of results is greater than 10
@@ -140,7 +135,6 @@ function loadMovies(){
                     
                 }
                 
-            }
             //upon entering the site for the first time, searchString_global is null.
             // To prevent "null" as a result shown without the user entering it,
             //the page is cleared before the user makes another search that is not "null" 
@@ -827,11 +821,3 @@ $(document).on( 'click', '#showMorebutton', function () {
     }
     
 });
-
-
-
-    
-
-
-
-    
