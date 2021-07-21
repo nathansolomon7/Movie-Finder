@@ -13,6 +13,7 @@
  var isgetRidofFilterSearch = false;
  var isMoretenFilteredresults = false;
  var isEndReachedShowMore = false;
+ var isFirstsearch = false;
  var startingPageNum;
  var response_global;
  var concatFilteredArray_global;
@@ -47,9 +48,9 @@ function loadMovies(){
         // as it should upon calling loadMovies() if the user does not clear out their
         // filter search boxes prior to making a standard search
         loadMoviesCounter++;
-        
+        console.log("pageNum in loadMovies: " + pageNum);
         if(loadMoviesCounter == 1){
-            if (pageNum != 1){
+            if (isFirstSearch = false){
                 pageNum = 1;
             }
         }
@@ -315,6 +316,8 @@ function generatePagebuttons(totalNumpages_global) {
 //the loadMovies() function, giving 10 more search results to the user
 $(document).on( 'click', '#nextPagebutton', function () {
     pageNum = pageNum + 1;
+    isFirstSearch = true;
+    console.log("PageNum on pressing next page: " + pageNum);
     if(isFilteredSearch == true){
         if(isFilteredSearch == true){
             generatePagebuttons();
@@ -500,18 +503,19 @@ var concatResponse
 var nextResponse;
 var startingPageNum;
 
-function showMoreresults(currentPagenum, firstResponse){
+function showMoreresults(firstResponse){
     
     isShowMoreclicked = true;
     //firstResponse holds the first API call for page 1, whose array of movies is 
     //stored in firstResponseArray
     firstResponseArray = firstResponse.Search;
-    currentPagenum = currentPagenum + 1;
-    $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + currentPagenum).then(
+    pageNum ++;
+    console.log("pageNum: " + pageNum);
+    $.getJSON('https://www.omdbapi.com/?s=' + searchString_global + '&apikey=ae410769' + '&page=' + pageNum).then(
         function(response){
             //nextResponse stores the page 2 of the API call's results
             nextResponse = response.Search;
-            if (currentPagenum == 2){
+            if (pageNum == 2){
                 // if its the first time showMore is being pressed, concatanate 
                 // the first page of results with the second page of results
                 concatResponse = firstResponseArray.concat(nextResponse);
@@ -520,7 +524,7 @@ function showMoreresults(currentPagenum, firstResponse){
                 //combined response with the succeeding page's response to then display to the user
                 concatResponse = concatResponse.concat(nextResponse);
             }
-                pageNum ++;
+                
                     // displays the concatanated array to the user when show More is pressed,
                     // thus showing more than 10 results to the user
                     displayMoviesFiltered(concatResponse);
@@ -810,6 +814,7 @@ $(document).on( 'click', '#showMorebutton', function () {
     // isFilteredSearch = false;
     startingPageNum = pageNum;
     isShowMoreresults = true;
+    isFirstsearch = true;
     if(isFilteredSearch == true){
         // if it is a filtered search and show more button is pressed,
         //showMoreresultsFiltered is called;
@@ -817,7 +822,7 @@ $(document).on( 'click', '#showMorebutton', function () {
     }
     else{
         // when show More button is pressed, showMore results is called
-        showMoreresults(pageNum, response_global);
+        showMoreresults(response_global);
     }
     
 });
